@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更多项目 | 个人作品集</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 引入Google字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36CFFB',
+                        dark: '#1D2939',
+                        light: '#F9FAFB'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .transition-transform {
+        transition-property: transform;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 300ms;
+      }
+      .hover-lift {
+        @apply hover:-translate-y-1 transition-all duration-300;
+      }
+      .filter-active {
+        @apply bg-primary text-white;
+      }
+    }
+  </style>
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .project-card img {
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .nav-scrolled {
+            @apply bg-white shadow-md;
+        }
+
+        .project-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .project-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="bg-light text-dark font-inter">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-transparent">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <a href="index.html#hero" class="text-2xl font-bold text-primary">Portfolio</a>
+
+                <!-- 桌面导航 -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="index.html#about" class="text-dark hover:text-primary transition-colors">关于我</a>
+                    <a href="index.html#skills" class="text-dark hover:text-primary transition-colors">技能</a>
+                    <a href="index.html#projects" class="text-primary font-medium">项目</a>
+                    <a href="index.html#contact" class="text-dark hover:text-primary transition-colors">联系我</a>
+                </nav>
+
+                <!-- 移动端菜单按钮 -->
+                <button id="menu-toggle" class="md:hidden text-dark focus:outline-none">
+                    <i class="fa fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg absolute w-full">
+            <div class="container mx-auto px-4 py-3 space-y-3">
+                <a href="index.html#about" class="block py-2 text-dark hover:text-primary transition-colors">关于我</a>
+                <a href="index.html#skills" class="block py-2 text-dark hover:text-primary transition-colors">技能</a>
+                <a href="index.html#projects" class="block py-2 text-primary font-medium">项目</a>
+                <a href="index.html#contact" class="block py-2 text-dark hover:text-primary transition-colors">联系我</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 页面标题区域 -->
+    <section class="pt-32 pb-16 md:pt-40 md:pb-24 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold leading-tight text-dark mb-4">
+                我的项目作品集
+            </h1>
+            <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                探索我近年来完成的项目，涵盖网站开发、移动应用、UI设计等多个领域
+            </p>
+        </div>
+    </section>
+
+    <!-- 项目筛选和列表 -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 项目筛选 -->
+            <div class="mb-12 text-center">
+                <div class="inline-flex flex-wrap justify-center gap-3">
+                    <button
+                        class="filter-btn filter-active px-5 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium"
+                        data-filter="all">
+                        全部项目
+                    </button>
+                    <button
+                        class="filter-btn px-5 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium"
+                        data-filter="web">
+                        网站开发
+                    </button>
+                    <button
+                        class="filter-btn px-5 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium"
+                        data-filter="app">
+                        移动应用
+                    </button>
+                    <button
+                        class="filter-btn px-5 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium"
+                        data-filter="ui">
+                        UI/UX设计
+                    </button>
+                    <button
+                        class="filter-btn px-5 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium"
+                        data-filter="ecommerce">
+                        电商平台
+                    </button>
+                </div>
+            </div>
+
+            <!-- 项目列表 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 项目1 -->
+                <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                    data-category="web">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/0/600/400" alt="电商网站项目" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <span
+                                class="text-sm font-medium bg-blue-100 text-primary px-3 py-1 rounded-full">网站开发</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">现代电商平台</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            基于React和Node.js开发的全功能电商平台，包含商品展示、购物车、支付等功能。
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">React</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Node.js</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目2 -->
+                <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                    data-category="web">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/180/600/400" alt="管理系统项目" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <span
+                                class="text-sm font-medium bg-green-100 text-green-600 px-3 py-1 rounded-full">管理系统</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">企业管理后台</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            基于Vue和Element UI开发的企业级管理系统，支持数据可视化和权限管理。
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Vue</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Element UI</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">ECharts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目3 -->
+                <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                    data-category="app">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/160/600/400" alt="移动应用项目" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <span
+                                class="text-sm font-medium bg-purple-100 text-purple-600 px-3 py-1 rounded-full">移动应用</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">健康追踪APP</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            基于React Native开发的跨平台健康追踪应用，支持运动记录和健康数据分析。
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">React Native</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Redux</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Firebase</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目4 -->
+                <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                    data-category="ui">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/1/600/400" alt="设计系统项目" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <span
+                                class="text-sm font-medium bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full">UI设计</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-behance"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">企业设计系统</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            为科技公司打造的完整设计系统，包含组件库、设计规范和交互模式。
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Figma</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">设计系统</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">UI组件</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目5 -->
+                <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                    data-category="ecommerce">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/26/600/400" alt="时尚电商项目" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <span
+                                class="text-sm font-medium bg-pink-100 text-pink-600 px-3 py-1 rounded-full">电商平台</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">时尚品牌电商</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            为高端时尚品牌开发的电商网站，具有沉浸式体验和流畅的购物流程。
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Next.js</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">GraphQL</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Stripe</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目6 -->
+                <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                    data-category="web">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/48/600/400" alt="博客平台项目" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <span
+                                class="text-sm font-medium bg-blue-100 text-primary px-3 py-1 rounded-full">网站开发</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">内容管理系统</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            基于Headless CMS架构的博客平台，支持Markdown编辑和社交分享功能。
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Gatsby</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Contentful</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Netlify</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目7 -->
+                <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                    data-category="app">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/96/600/400" alt="任务管理应用" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <span
+                                class="text-sm font-medium bg-purple-100 text-purple-600 px-3 py-1 rounded-full">移动应用</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">团队任务管理APP</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            基于Flutter开发的跨平台任务管理应用，支持团队协作和进度追踪。
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Flutter</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Dart</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Firebase</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目8 -->
+                <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                    data-category="ui">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/60/600/400" alt="移动应用设计" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <span
+                                class="text-sm font-medium bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full">UX设计</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-dribbble"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">金融应用重设计</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            对现有银行应用进行的UX重设计，提高用户参与度和操作效率。
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Figma</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">用户研究</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">原型设计</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 项目9 -->
+                <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                    data-category="ecommerce">
+                    <div class="h-56 overflow-hidden">
+                        <img src="https://picsum.photos/id/42/600/400" alt="市场平台项目" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <span
+                                class="text-sm font-medium bg-pink-100 text-pink-600 px-3 py-1 rounded-full">电商平台</span>
+                            <div class="flex space-x-2">
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-link"></i>
+                                </a>
+                                <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                                    <i class="fa fa-github"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">多商户电商市场</h3>
+                        <p class="text-gray-600 text-sm mb-4">
+                            类似于Shopify的多商户电商平台，支持独立店铺和统一管理后台。
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Laravel</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">Vue</span>
+                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">PayPal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 加载更多按钮 -->
+            <div class="text-center mt-16">
+                <button id="load-more"
+                    class="inline-flex items-center bg-white hover:bg-gray-100 text-primary border border-primary font-medium py-3 px-8 rounded-lg transition-all hover-lift">
+                    加载更多项目 <i class="fa fa-refresh ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系区域 -->
+    <section class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-6">对我的项目感兴趣？</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto mb-8">
+                无论您是想讨论合作机会，还是有项目需求，都欢迎与我联系
+            </p>
+            <a href="index.html#contact"
+                class="inline-flex items-center bg-primary hover:bg-primary/90 text-white font-medium py-3 px-8 rounded-lg transition-all hover-lift">
+                联系我 <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <a href="index.html#hero" class="text-2xl font-bold text-white">Portfolio</a>
+                    <p class="text-gray-400 mt-2">专注于创建优秀的数字体验</p>
+                </div>
+
+                <div class="flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0">
+                    <a href="index.html#about" class="text-gray-400 hover:text-white transition-colors">关于我</a>
+                    <a href="index.html#skills" class="text-gray-400 hover:text-white transition-colors">技能</a>
+                    <a href="index.html#projects" class="text-gray-400 hover:text-white transition-colors">项目</a>
+                    <a href="index.html#contact" class="text-gray-400 hover:text-white transition-colors">联系我</a>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 个人网站. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button id="back-to-top"
+        class="fixed bottom-8 right-8 bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg opacity-0 invisible transition-all z-50">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        const backToTop = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > 100) {
+                navbar.classList.add('nav-scrolled');
+                backToTop.classList.remove('opacity-0', 'invisible');
+                backToTop.classList.add('opacity-100', 'visible');
+            } else {
+                navbar.classList.remove('nav-scrolled');
+                backToTop.classList.add('opacity-0', 'invisible');
+                backToTop.classList.remove('opacity-100', 'visible');
+            }
+
+            // 项目卡片滚动动画
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100 && rect.bottom >= 0) {
+                    card.classList.add('visible');
+                }
+            });
+        });
+
+        // 移动端菜单
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuToggle.addEventListener('click', function () {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 点击移动端菜单项后关闭菜单
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // 返回顶部按钮
+        backToTop.addEventListener('click', function () {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 项目筛选功能
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                // 更新按钮状态
+                filterButtons.forEach(btn => btn.classList.remove('filter-active'));
+                this.classList.add('filter-active');
+
+                const filter = this.getAttribute('data-filter');
+
+                // 筛选项目
+                projectCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'block';
+                        // 延迟添加动画类以重新触发动画
+                        setTimeout(() => {
+                            card.classList.add('visible');
+                        }, 50);
+                    } else {
+                        card.classList.remove('visible');
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 500);
+                    }
+                });
+            });
+        });
+
+        // 加载更多项目
+        const loadMoreBtn = document.getElementById('load-more');
+        let projectsLoaded = 9; // 当前已加载的项目数量
+
+        loadMoreBtn.addEventListener('click', function () {
+            // 模拟加载更多项目
+            this.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 加载中...';
+
+            setTimeout(() => {
+                // 复制现有项目并修改内容作为新项目
+                const projectGrid = document.querySelector('.grid');
+                const categories = ['web', 'app', 'ui', 'ecommerce'];
+                const titles = [
+                    '旅行分享平台', '在线教育系统', '音乐流媒体应用',
+                    '智能家居控制中心', '餐厅预订系统', '房地产展示平台'
+                ];
+                const descriptions = [
+                    '基于React开发的旅行照片和体验分享社区平台。',
+                    '支持直播和录播的在线教育系统，包含课程管理功能。',
+                    '具有个性化推荐功能的音乐流媒体应用，支持离线播放。',
+                    '整合多种智能设备的控制中心，支持语音控制。',
+                    '支持餐桌预订和外卖点餐的餐厅管理系统。',
+                    '3D展示和虚拟看房功能的房地产平台。'
+                ];
+                const techs = [
+                    ['React', 'Firebase', 'Mapbox'],
+                    ['Angular', 'Node.js', 'MongoDB'],
+                    ['Swift', 'Kotlin', 'AWS'],
+                    ['Vue', 'Socket.io', 'Raspberry Pi'],
+                    ['Laravel', 'Tailwind', 'Stripe'],
+                    ['Three.js', 'Next.js', 'GraphQL']
+                ];
+                const colors = ['blue-100 text-primary', 'green-100 text-green-600', 'purple-100 text-purple-600', 'yellow-100 text-yellow-600', 'pink-100 text-pink-600'];
+                const labels = ['网站开发', '教育系统', '移动应用', '智能家居', '餐饮系统', '房产平台'];
+                const imageIds = [10, 20, 30, 40, 50, 60];
+
+                // 添加3个新项目
+                for (let i = 0; i < 3; i++) {
+                    const randomIndex = Math.floor(Math.random() * titles.length);
+                    const randomCatIndex = Math.floor(Math.random() * categories.length);
+                    const randomColorIndex = Math.floor(Math.random() * colors.length);
+
+                    const newProject = document.createElement('div');
+                    newProject.className = 'project-card bg-white rounded-xl shadow-md overflow-hidden hover-lift';
+                    newProject.setAttribute('data-category', categories[randomCatIndex]);
+                    newProject.style.display = 'none';
+
+                    newProject.innerHTML = `
+            <div class="h-56 overflow-hidden">
+              <img src="https://picsum.photos/id/${imageIds[randomIndex]}/600/400" alt="${titles[randomIndex]}" class="w-full h-full object-cover">
+            </div>
+            <div class="p-6">
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-sm font-medium bg-${colors[randomColorIndex]} px-3 py-1 rounded-full">${labels[randomIndex]}</span>
+                <div class="flex space-x-2">
+                  <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                    <i class="fa fa-link"></i>
+                  </a>
+                  <a href="#" class="text-gray-500 hover:text-primary transition-colors">
+                    <i class="fa fa-github"></i>
+                  </a>
+                </div>
+              </div>
+              <h3 class="text-xl font-semibold mb-2">${titles[randomIndex]}</h3>
+              <p class="text-gray-600 text-sm mb-4">
+                ${descriptions[randomIndex]}
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">${techs[randomIndex][0]}</span>
+                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">${techs[randomIndex][1]}</span>
+                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">${techs[randomIndex][2]}</span>
+              </div>
+            </div>
+          `;
+
+                    projectGrid.appendChild(newProject);
+
+                    // 显示新添加的项目并触发动画
+                    setTimeout(() => {
+                        newProject.style.display = 'block';
+                        setTimeout(() => {
+                            newProject.classList.add('visible');
+                        }, 50);
+                    }, i * 150);
+                }
+
+                projectsLoaded += 3;
+
+                // 如果加载了足够多的项目，隐藏加载更多按钮
+                if (projectsLoaded >= 18) {
+                    loadMoreBtn.innerHTML = '已加载全部项目';
+                    loadMoreBtn.disabled = true;
+                    loadMoreBtn.classList.add('opacity-70', 'cursor-not-allowed');
+                    loadMoreBtn.classList.remove('hover:bg-gray-100', 'hover-lift');
+                } else {
+                    loadMoreBtn.innerHTML = '加载更多项目 <i class="fa fa-refresh ml-2"></i>';
+                }
+            }, 1500);
+        });
+
+        // 页面加载时初始化项目卡片动画
+        window.addEventListener('load', function () {
+            setTimeout(() => {
+                const projectCards = document.querySelectorAll('.project-card');
+                projectCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+                    }, index * 100);
+                });
+            }, 300);
+        });
+    </script>
+</body>
+
+</html>
