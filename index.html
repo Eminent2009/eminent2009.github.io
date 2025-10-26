@@ -54,9 +54,10 @@
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         transition-duration: 300ms;
       }
-      .hover-lift {
-        @apply hover:-translate-y-1 transition-all duration-300;
-      }
+    .hover-lift:hover {
+        transform: translateY(-0.25rem);
+        transition: all 0.3s;
+    }
     }
   </style>
 
@@ -92,7 +93,8 @@
         }
 
         .nav-scrolled {
-            @apply bg-white shadow-md;
+            background-color: #fff;
+            box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
         }
     </style>
 </head>

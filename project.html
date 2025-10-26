@@ -44,11 +44,14 @@
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         transition-duration: 300ms;
       }
-      .hover-lift {
-        @apply hover:-translate-y-1 transition-all duration-300;
+      .hover-lift:hover {
+        transform: translateY(-0.25rem);
+        transition-property: all;
+        transition-duration: 300ms;
       }
       .filter-active {
-        @apply bg-primary text-white;
+        background-color: #165DFF;
+        color: #fff;
       }
     }
   </style>
@@ -71,7 +74,8 @@
         }
 
         .nav-scrolled {
-            @apply bg-white shadow-md;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
         }
 
         .project-card {
@@ -136,7 +140,7 @@
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <!-- 项目筛选 -->
-            <div class="mb-12 text-center">
+            <div class="mb-12 text-center"><!-- 更改需替换data-dilter -->
                 <div class="inline-flex flex-wrap justify-center gap-3">
                     <button
                         class="filter-btn filter-active px-5 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium"
@@ -150,13 +154,13 @@
                     </button>
                     <button
                         class="filter-btn px-5 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium"
-                        data-filter="app">
-                        暂定
+                        data-filter="mod">
+                        mod
                     </button>
                 </div>
             </div>
 
-            <!-- 项目列表 -->
+            <!-- 项目列表（更换data-category以更改类型） -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- 项目1 -->
                 <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
@@ -169,7 +173,8 @@
                             <span
                                 class="text-sm font-medium bg-blue-100 text-primary px-3 py-1 rounded-full">页面工具</span>
                             <div class="flex space-x-2">
-                                <a href="./projects/name-caller.html" class="text-gray-500 hover:text-primary transition-colors">
+                                <a href="./projects/name-caller.html"
+                                    class="text-gray-500 hover:text-primary transition-colors">
                                     <i class="fa fa-link"></i>
                                 </a>
                             </div>
@@ -184,14 +189,14 @@
                     </div>
                 </div>
 
-            <!-- 加载更多按钮 -->
-            <div class="text-center mt-16">
-                <button id="load-more"
-                    class="inline-flex items-center bg-white hover:bg-gray-100 text-primary border border-primary font-medium py-3 px-8 rounded-lg transition-all hover-lift">
-                    加载更多项目 <i class="fa fa-refresh ml-2"></i>
-                </button>
+                <!-- 加载更多按钮 -->
+                <div class="text-center mt-16">
+                    <button id="load-more"
+                        class="inline-flex items-center bg-white hover:bg-gray-100 text-primary border border-primary font-medium py-3 px-8 rounded-lg transition-all hover-lift">
+                        加载更多项目 <i class="fa fa-refresh ml-2"></i>
+                    </button>
+                </div>
             </div>
-        </div>
     </section>
 
     <!-- 联系区域 -->
@@ -327,79 +332,8 @@
             this.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 加载中...';
 
             setTimeout(() => {
-                // 复制现有项目并修改内容作为新项目
-                const projectGrid = document.querySelector('.grid');
-                const categories = ['web', 'app', 'ui', 'ecommerce'];
-                const titles = [
-                    '点名器', 
-                ];
-                const descriptions = [
-                    '基于HTML开发的课堂点名器。',
-                ];
-                const techs = [
-                    ['React', 'Firebase', 'Mapbox'],
-                    ['Angular', 'Node.js', 'MongoDB'],
-                    ['Swift', 'Kotlin', 'AWS'],
-                    ['Vue', 'Socket.io', 'Raspberry Pi'],
-                    ['Laravel', 'Tailwind', 'Stripe'],
-                    ['Three.js', 'Next.js', 'GraphQL']
-                ];
-                const colors = ['blue-100 text-primary', 'green-100 text-green-600', 'purple-100 text-purple-600', 'yellow-100 text-yellow-600', 'pink-100 text-pink-600'];
-                const labels = ['页面工具',];
-                const imageIds = [10, 20, 30, 40, 50, 60];
-
-                // 添加3个新项目
-                for (let i = 0; i < 3; i++) {
-                    const randomIndex = Math.floor(Math.random() * titles.length);
-                    const randomCatIndex = Math.floor(Math.random() * categories.length);
-                    const randomColorIndex = Math.floor(Math.random() * colors.length);
-
-                    const newProject = document.createElement('div');
-                    newProject.className = 'project-card bg-white rounded-xl shadow-md overflow-hidden hover-lift';
-                    newProject.setAttribute('data-category', categories[randomCatIndex]);
-                    newProject.style.display = 'none';
-
-                    newProject.innerHTML = `
-            <div class="h-56 overflow-hidden">
-              <img src="https://picsum.photos/id/${imageIds[randomIndex]}/600/400" alt="${titles[randomIndex]}" class="w-full h-full object-cover">
-            </div>
-            <div class="p-6">
-              <div class="flex justify-between items-center mb-3">
-                <span class="text-sm font-medium bg-${colors[randomColorIndex]} px-3 py-1 rounded-full">${labels[randomIndex]}</span>
-                <div class="flex space-x-2">
-                  <a href="#" class="text-gray-500 hover:text-primary transition-colors">
-                    <i class="fa fa-link"></i>
-                  </a>
-                  <a href="#" class="text-gray-500 hover:text-primary transition-colors">
-                    <i class="fa fa-github"></i>
-                  </a>
-                </div>
-              </div>
-              <h3 class="text-xl font-semibold mb-2">${titles[randomIndex]}</h3>
-              <p class="text-gray-600 text-sm mb-4">
-                ${descriptions[randomIndex]}
-              </p>
-              <div class="flex flex-wrap gap-2">
-                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">${techs[randomIndex][0]}</span>
-                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">${techs[randomIndex][1]}</span>
-                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">${techs[randomIndex][2]}</span>
-              </div>
-            </div>
-          `;
-
-                    projectGrid.appendChild(newProject);
-
-                    // 显示新添加的项目并触发动画
-                    setTimeout(() => {
-                        newProject.style.display = 'block';
-                        setTimeout(() => {
-                            newProject.classList.add('visible');
-                        }, 50);
-                    }, i * 150);
-                }
-
-                projectsLoaded += 3;
-
+                // 模拟添加更多项目卡片
+                const projectGrid = document.querySelector('.grid');       
                 // 如果加载了足够多的项目，隐藏加载更多按钮
                 if (projectsLoaded >= 18) {
                     loadMoreBtn.innerHTML = '已加载全部项目';
@@ -427,4 +361,4 @@
 </body>
 
 
-</html>
+</html> 
