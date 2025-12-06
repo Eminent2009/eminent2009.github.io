@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>项目卡片生成器 | 可视化配置工具</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #165DFF;
+            --primary-light: #E8F3FF;
+            --secondary: #36CFFB;
+            --dark: #1D2939;
+            --light: #F9FAFB;
+            --success: #00B42A;
+            --warning: #FF7D00;
+            --danger: #F53F3F;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+        }
+        
+        .code-output {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0E4BD8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(22, 93, 255, 0.2);
+        }
+        
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+        
+        .toast {
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- 顶部导航 -->
+    <header class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa fa-code text-primary text-xl"></i>
+                <h1 class="text-xl font-bold">项目卡片生成器</h1>
+            </div>
+            <div class="text-sm text-gray-500">
+                <span class="bg-primary-light text-primary px-3 py-1 rounded-full">v2.0</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- 提示消息 -->
+        <div id="toast" class="toast fixed top-20 right-6 bg-white shadow-lg rounded-lg p-4 flex items-center gap-3 z-50 max-w-md">
+            <i id="toastIcon" class="fa fa-check-circle text-success text-xl"></i>
+            <span id="toastMessage">操作成功！</span>
+            <button onclick="hideToast()" class="ml-auto text-gray-400 hover:text-gray-600">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <!-- 介绍区域 -->
+        <div class="mb-10 text-center">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold mb-4">可视化项目卡片配置工具</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+                轻松生成符合网站风格的项目卡片代码，支持自定义分类、技术栈等配置，一键复制即可使用
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- 表单区域 - 占5列 -->
+            <div class="lg:col-span-5">
+                <div class="card bg-white rounded-xl shadow-md p-6 h-full">
+                    <div class="flex items-center gap-2 mb-6 pb-2 border-b">
+                        <i class="fa fa-pencil-square-o text-primary"></i>
+                        <h2 class="text-lg font-semibold">项目信息配置</h2>
+                    </div>
+                    
+                    <form id="projectForm" class="space-y-5">
+                        <!-- 项目链接 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="projectLink">
+                                <i class="fa fa-link text-primary mr-1"></i>项目链接
+                            </label>
+                            <input type="text" id="projectLink" name="projectLink" 
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                                   value="" placeholder="例如: ./projects/xxx.html">
+                        </div>
+
+                        <!-- 项目分类管理 -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="block text-sm font-medium text-gray-700">
+                                    <i class="fa fa-tags text-primary mr-1"></i>项目分类
+                                </label>
+                                <button type="button" onclick="addCustomCategory()" class="text-xs text-primary hover:text-primary/80">
+                                    <i class="fa fa-plus-circle mr-1"></i>添加自定义分类
+                                </button>
+                            </div>
+                            
+                            <!-- 预设分类 -->
+                            <div id="categoryContainer" class="mb-3">
+                                <select id="projectCategory" name="projectCategory"
+                                        class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
+                                    <option value="web">网站 (web)</option>
+                                    <option value="mine">Minecraft (mine)</option>
+                                    <option value="custom">自定义分类 ↓</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 自定义分类输入 -->
+                            <div id="customCategoryInput" class="hidden mb-3">
+                                <input type="text" id="customCategoryKey" 
+                                       class="form-input w-full px-3 py-2 border border-gray-300 rounded-md mb-2 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                                       placeholder="分类标识 (英文，例如: tool)">
+                                <input type="text" id="customCategoryText" 
+                                       class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                                       placeholder="分类显示文本 (例如: 工具)">
+                            </div>
+                            
+                            <!-- 已添加的自定义分类 -->
+                            <div id="customCategoriesList" class="flex flex-wrap mt-2">
+                                <div class="category-badge bg-blue-100 text-primary">
+                                    <span>web (网站)</span>
+                                    <button type="button" onclick="removeCategory('web')" class="text-xs text-primary/70 hover:text-primary">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="category-badge bg-purple-100 text-purple-700">
+                                    <span>mine (Minecraft)</span>
+                                    <button type="button" onclick="removeCategory('mine')" class="text-xs text-purple-700/70 hover:text-purple-700">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 图片设置 -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="imagePath">
+                                    <i class="fa fa-image text-primary mr-1"></i>图片路径
+                                </label>
+                                <input type="text" id="imagePath" name="imagePath" 
+                                       class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                                       value="" placeholder="例如: ./imgs/project.jpg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1" for="imageAlt">
+                                    <i class="fa fa-info-circle text-primary mr-1"></i>图片描述
+                                </label>
+                                <input type="text" id="imageAlt" name="imageAlt" 
+                                       class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                                       value="" placeholder="例如: 项目名称">
+                            </div>
+                        </div>
+
+                        <!-- 项目标题 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="projectTitle">
+                                <i class="fa fa-heading text-primary mr-1"></i>项目标题
+                            </label>
+                            <input type="text" id="projectTitle" name="projectTitle" 
+                                   class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                                   value="" placeholder="例如: 课堂点名器">
+                        </div>
+
+                        <!-- 项目描述 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1" for="projectDesc">
+                                <i class="fa fa-file-text-o text-primary mr-1"></i>项目描述
+                            </label>
+                            <textarea id="projectDesc" name="projectDesc" rows="3"
+                                      class="form-input w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                                      placeholder="项目详细描述"></textarea>
+                        </div>
+
+                        <!-- 技术栈 -->
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="block text-sm font-medium text-gray-700">
+                                    <i class="fa fa-code text-primary mr-1"></i>技术栈
+                                </label>
+                                <button type="button" onclick="addTechStack()" class="text-xs text-primary hover:text-primary/80">
+                                    <i class="fa fa-plus-circle mr-1"></i>添加
+                                </button>
+                            </div>
+                            <div class="flex gap-2 mb-2">
+                                <input type="text" id="techStackInput" 
+                                       class="form-input flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                                       placeholder="例如: HTML、CSS、JavaScript">
+                                <button type="button" onclick="addTechStack()" class="btn-primary text-white px-4 py-2 rounded-md">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                            <div id="techStackList" class="flex flex-wrap mt-2">
+                                <div class="category-badge bg-gray-100 text-gray-700">
+                                    <span>HTML</span>
+                                    <button type="button" onclick="removeTech('HTML')" class="text-xs text-gray-700/70 hover:text-gray-700">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="category-badge bg-gray-100 text-gray-700">
+                                    <span>CSS</span>
+                                    <button type="button" onclick="removeTech('CSS')" class="text-xs text-gray-700/70 hover:text-gray-700">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="category-badge bg-gray-100 text-gray-700">
+                                    <span>JavaScript</span>
+                                    <button type="button" onclick="removeTech('JavaScript')" class="text-xs text-gray-700/70 hover:text-gray-700">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit" class="btn-primary w-full text-white font-medium py-3 px-4 rounded-md transition-colors flex items-center justify-center gap-2">
+                                <i class="fa fa-magic"></i>
+                                生成项目卡片代码
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 代码输出区域 - 占7列 -->
+            <div class="lg:col-span-7">
+                <div class="card bg-white rounded-xl shadow-md p-6 h-full flex flex-col">
+                    <div class="flex items-center gap-2 mb-6 pb-2 border-b">
+                        <i class="fa fa-code text-primary"></i>
+                        <h2 class="text-lg font-semibold">生成结果</h2>
+                    </div>
+                    
+                    <!-- 添加位置提示 -->
+                    <div class="mb-6 p-4 bg-primary-light rounded-lg border border-primary/10">
+                        <h3 class="text-sm font-medium text-primary mb-2 flex items-center">
+                            <i class="fa fa-info-circle mr-2"></i>添加位置提示
+                        </h3>
+                        <p class="text-sm text-gray-700 mb-3">请将生成的代码添加到 <span class="highlight">project.html</span> 文件中以下位置：</p>
+                        <div class="text-xs bg-white p-3 rounded text-gray-800 font-mono shadow-sm">
+                            &lt;!-- 项目列表 --&gt;<br>
+                            &lt;div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"&gt;<br>
+                            <span class="text-primary font-medium">    ↓ 在这里添加生成的代码 ↓</span><br>
+                            &nbsp;&nbsp;&nbsp;&lt;!-- 加载更多按钮 --&gt;<br>
+                            &nbsp;&nbsp;&nbsp;&lt;div class="text-center mt-16 col-span-1 md:col-span-2 lg:col-span-3"&gt;<br>
+                        </div>
+                    </div>
+
+                    <!-- 操作按钮 -->
+                    <div class="flex gap-3 mb-4">
+                        <button id="copyBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-md transition-colors flex items-center gap-2">
+                            <i class="fa fa-copy"></i>复制代码
+                        </button>
+                        <button id="previewBtn" class="bg-primary-light hover:bg-primary-light/80 text-primary font-medium py-2 px-4 rounded-md transition-colors flex items-center gap-2">
+                            <i class="fa fa-eye"></i>预览效果
+                        </button>
+                        <button id="resetBtn" class="ml-auto bg-gray-50 hover:bg-gray-100 text-gray-600 font-medium py-2 px-4 rounded-md transition-colors flex items-center gap-2">
+                            <i class="fa fa-refresh"></i>重置表单
+                        </button>
+                    </div>
+
+                    <!-- 代码输出区域 -->
+                    <div class="flex-1 overflow-hidden">
+                        <div id="codeOutput" class="code-output bg-gray-900 text-gray-100 p-4 rounded-md text-sm h-80 overflow-auto">
+                            <!-- 生成的代码将显示在这里 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使用说明 -->
+        <div class="mt-10 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-800">
+                <i class="fa fa-book text-primary mr-2"></i>使用说明
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <ol class="list-decimal list-inside text-gray-700 space-y-2 text-sm">
+                        <li class="flex items-start">
+                            <span class="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">1</span>
+                            <span>填写项目基本信息（链接、分类、图片等）</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">2</span>
+                            <span>可添加自定义分类（点击"添加自定义分类"按钮）</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">3</span>
+                            <span>配置技术栈标签（支持批量添加和删除）</span>
+                        </li>
+                    </ol>
+                </div>
+                <div>
+                    <ol class="list-decimal list-inside text-gray-700 space-y-2 text-sm" start="4">
+                        <li class="flex items-start">
+                            <span class="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">4</span>
+                            <span>点击"生成项目卡片代码"按钮生成代码</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">5</span>
+                            <span>复制生成的代码，粘贴到指定位置</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="bg-primary/10 text-primary rounded-full w-6 h-6 flex items-center justify-center mr-2 mt-0.5 flex-shrink-0">6</span>
+                            <span>保存文件并刷新页面查看效果</span>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 预览模态框 -->
+    <div id="previewModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-auto">
+            <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="font-semibold text-lg">项目卡片预览</h3>
+                <button onclick="closePreview()" class="text-gray-400 hover:text-gray-600">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="p-8">
+                <div id="previewContent" class="max-w-md mx-auto">
+                    <!-- 预览内容将显示在这里 -->
+                </div>
+            </div>
+            <div class="p-4 bg-gray-50 flex justify-end">
+                <button onclick="closePreview()" class="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors">
+                    关闭预览
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-gray-100 mt-12 py-6">
+        <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>项目卡片生成器 v2.0 | 设计与开发 © 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // 全局变量
+        let customCategories = {
+            'web': '网站',
+            'mine': 'Minecraft'
+        };
+        let techStacks = ['HTML', 'CSS', 'JavaScript'];
+        
+        // 显示/隐藏自定义分类输入
+        document.getElementById('projectCategory').addEventListener('change', function() {
+            const customInput = document.getElementById('customCategoryInput');
+            if (this.value === 'custom') {
+                customInput.classList.remove('hidden');
+            } else {
+                customInput.classList.add('hidden');
+            }
+        });
+        
+        // 添加自定义分类
+        function addCustomCategory() {
+            const categoryKey = document.getElementById('customCategoryKey').value.trim();
+            const categoryText = document.getElementById('customCategoryText').value.trim();
+            
+            if (!categoryKey || !categoryText) {
+                showToast('请填写完整的分类信息', 'warning');
+                return;
+            }
+            
+            if (customCategories[categoryKey]) {
+                showToast('该分类标识已存在', 'warning');
+                return;
+            }
+            
+            // 添加到分类列表
+            customCategories[categoryKey] = categoryText;
+            
+            // 更新下拉菜单
+            const select = document.getElementById('projectCategory');
+            const option = document.createElement('option');
+            option.value = categoryKey;
+            option.textContent = `${categoryText} (${categoryKey})`;
+            select.appendChild(option);
+            
+            // 添加到显示列表
+            addCategoryBadge(categoryKey, categoryText);
+            
+            // 清空输入框
+            document.getElementById('customCategoryKey').value = '';
+            document.getElementById('customCategoryText').value = '';
+            
+            // 隐藏自定义输入
+            document.getElementById('customCategoryInput').classList.add('hidden');
+            
+            showToast('自定义分类添加成功！');
+        }
+        
+        // 添加分类标签
+        function addCategoryBadge(key, text) {
+            const list = document.getElementById('customCategoriesList');
+            const colors = ['bg-blue-100 text-primary', 'bg-purple-100 text-purple-700', 'bg-green-100 text-green-700', 
+                           'bg-yellow-100 text-yellow-700', 'bg-red-100 text-red-700', 'bg-pink-100 text-pink-700'];
+            const colorIndex = Object.keys(customCategories).indexOf(key) % colors.length;
+            
+            const badge = document.createElement('div');
+            badge.className = `category-badge ${colors[colorIndex]}`;
+            badge.innerHTML = `
+                <span>${key} (${text})</span>
+                <button type="button" onclick="removeCategory('${key}')" class="text-xs ${colors[colorIndex].split(' ')[1]}/70 hover:${colors[colorIndex].split(' ')[1]}">
+                    <i class="fa fa-times"></i>
+                </button>
+            `;
+            list.appendChild(badge);
+        }
+        
+        // 删除分类
+        function removeCategory(key) {
+            if (['web', 'mine'].includes(key) && Object.keys(customCategories).length <= 2) {
+                showToast('至少保留一个分类', 'warning');
+                return;
+            }
+            
+            // 从对象中删除
+            delete customCategories[key];
+            
+            // 从下拉菜单中删除
+            const select = document.getElementById('projectCategory');
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === key) {
+                    select.remove(i);
+                    break;
+                }
+            }
+            
+            // 从显示列表中删除
+            const badges = document.getElementById('customCategoriesList').children;
+            for (let i = 0; i < badges.length; i++) {
+                if (badges[i].textContent.includes(`${key} (`)) {
+                    badges[i].remove();
+                    break;
+                }
+            }
+            
+            showToast('分类已删除');
+        }
+        
+        // 添加技术栈
+        function addTechStack() {
+            const input = document.getElementById('techStackInput');
+            const tech = input.value.trim();
+            
+            if (!tech) return;
+            
+            if (techStacks.includes(tech)) {
+                showToast('该技术栈已存在', 'warning');
+                return;
+            }
+            
+            techStacks.push(tech);
+            addTechBadge(tech);
+            input.value = '';
+            
+            showToast('技术栈添加成功');
+        }
+        
+        // 添加技术栈标签
+        function addTechBadge(tech) {
+            const list = document.getElementById('techStackList');
+            
+            const badge = document.createElement('div');
+            badge.className = 'category-badge bg-gray-100 text-gray-700';
+            badge.innerHTML = `
+                <span>${tech}</span>
+                <button type="button" onclick="removeTech('${tech}')" class="text-xs text-gray-700/70 hover:text-gray-700">
+                    <i class="fa fa-times"></i>
+                </button>
+            `;
+            list.appendChild(badge);
+        }
+        
+        // 删除技术栈
+        function removeTech(tech) {
+            if (techStacks.length <= 1) {
+                showToast('至少保留一个技术栈', 'warning');
+                return;
+            }
+            
+            // 从数组中删除
+            techStacks = techStacks.filter(item => item !== tech);
+            
+            // 从显示列表中删除
+            const badges = document.getElementById('techStackList').children;
+            for (let i = 0; i < badges.length; i++) {
+                if (badges[i].textContent.includes(tech)) {
+                    badges[i].remove();
+                    break;
+                }
+            }
+            
+            showToast('技术栈已删除');
+        }
+        
+        // 表单提交处理
+        document.getElementById('projectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            let categoryKey = document.getElementById('projectCategory').value;
+            let categoryText = '';
+            
+            // 处理自定义分类
+            if (categoryKey === 'custom') {
+                const customKey = document.getElementById('customCategoryKey').value.trim();
+                const customText = document.getElementById('customCategoryText').value.trim();
+                
+                if (!customKey || !customText) {
+                    showToast('请填写自定义分类信息', 'warning');
+                    return;
+                }
+                
+                categoryKey = customKey;
+                categoryText = customText;
+            } else {
+                categoryText = customCategories[categoryKey] || document.getElementById('categoryText').value;
+            }
+            
+            const formData = {
+                projectLink: document.getElementById('projectLink').value,
+                projectCategory: categoryKey,
+                categoryText: categoryText,
+                imagePath: document.getElementById('imagePath').value,
+                imageAlt: document.getElementById('imageAlt').value,
+                projectTitle: document.getElementById('projectTitle').value,
+                projectDesc: document.getElementById('projectDesc').value,
+                techStack: techStacks
+            };
+            
+            // 生成技术栈标签
+            let techTags = '';
+            formData.techStack.forEach(tech => {
+                techTags += `                                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">${tech}</span>\n`;
+            });
+            
+            // 生成项目卡片代码
+            const codeTemplate = `<!-- 项目1 -->
+                <a href="${formData.projectLink}">
+                    <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                        data-category="${formData.projectCategory}">
+                        <div class="h-56 overflow-hidden">
+                            <img src="${formData.imagePath}" alt="${formData.imageAlt}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-3">
+                                <span
+                                    class="text-sm font-medium bg-blue-100 text-primary px-3 py-1 rounded-full">${formData.categoryText}</span>
+                                <div class="flex space-x-2">
+                                    <a href="${formData.projectLink}"
+                                        class="text-gray-500 hover:text-primary transition-colors">
+                                        <i class="fa fa-link"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">${formData.projectTitle}</h3>
+                            <!-- 添加明确的类名确保描述可见 -->
+                            <p class="project-description text-gray-600 text-sm mb-4">
+                                ${formData.projectDesc}
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+${techTags}                            </div>
+                        </div>
+                    </div>
+                </a>`;
+            
+            // 显示生成的代码
+            document.getElementById('codeOutput').textContent = codeTemplate;
+            
+            showToast('代码生成成功！');
+        });
+        
+        // 复制代码功能
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const codeOutput = document.getElementById('codeOutput');
+            const textArea = document.createElement('textarea');
+            textArea.value = codeOutput.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            showToast('代码已复制到剪贴板！');
+        });
+        
+        // 预览功能
+        document.getElementById('previewBtn').addEventListener('click', function() {
+            const code = document.getElementById('codeOutput').textContent;
+            if (!code.trim()) {
+                showToast('请先生成代码', 'warning');
+                return;
+            }
+            
+            document.getElementById('previewContent').innerHTML = code;
+            document.getElementById('previewModal').classList.remove('hidden');
+            
+            // 添加预览样式
+            const style = document.createElement('style');
+            style.textContent = `
+                .hover-lift:hover {
+                    transform: translateY(-0.25rem);
+                    transition: all 0.3s;
+                }
+                .project-description {
+                    display: block !important;
+                    overflow: visible !important;
+                    height: auto !important;
+                }
+            `;
+            document.getElementById('previewContent').appendChild(style);
+        });
+        
+        // 关闭预览
+        function closePreview() {
+            document.getElementById('previewModal').classList.add('hidden');
+        }
+        
+        // 重置表单
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            document.getElementById('projectForm').reset();
+            techStacks = ['HTML', 'CSS', 'JavaScript'];
+            document.getElementById('techStackList').innerHTML = `
+                <div class="category-badge bg-gray-100 text-gray-700">
+                    <span>HTML</span>
+                    <button type="button" onclick="removeTech('HTML')" class="text-xs text-gray-700/70 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="category-badge bg-gray-100 text-gray-700">
+                    <span>CSS</span>
+                    <button type="button" onclick="removeTech('CSS')" class="text-xs text-gray-700/70 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="category-badge bg-gray-100 text-gray-700">
+                    <span>JavaScript</span>
+                    <button type="button" onclick="removeTech('JavaScript')" class="text-xs text-gray-700/70 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            `;
+            showToast('表单已重置');
+        });
+        
+        // 显示提示消息
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            // 设置图标和颜色
+            if (type === 'success') {
+                toastIcon.className = 'fa fa-check-circle text-success text-xl';
+            } else if (type === 'warning') {
+                toastIcon.className = 'fa fa-exclamation-circle text-warning text-xl';
+            } else if (type === 'error') {
+                toastIcon.className = 'fa fa-times-circle text-danger text-xl';
+            }
+            
+            // 设置消息
+            toastMessage.textContent = message;
+            
+            // 显示提示
+            toast.classList.add('show');
+            
+            // 3秒后隐藏
+            setTimeout(() => {
+                hideToast();
+            }, 3000);
+        }
+        
+        // 隐藏提示消息
+        function hideToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('show');
+        }
+        
+        // 页面加载时生成默认代码
+        window.addEventListener('load', function() {
+            document.getElementById('projectForm').dispatchEvent(new Event('submit'));
+        });
+        
+        // 点击模态框外部关闭预览
+        window.addEventListener('click', function(e) {
+            if (e.target === document.getElementById('previewModal')) {
+                closePreview();
+            }
+        });
+    </script>
+</body>
+</html>

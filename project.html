@@ -5,11 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>更多项目 | 个人作品集</title>
-    <!-- 引入Tailwind CSS -->
+    <!-- 引入外部资源 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- 引入Google字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Tailwind配置 -->
@@ -33,28 +31,28 @@
 
     <style type="text/tailwindcss">
         @layer utilities {
-      .content-auto {
-        content-visibility: auto;
-      }
-      .text-shadow {
-        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      }
-      .transition-transform {
-        transition-property: transform;
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        transition-duration: 300ms;
-      }
-      .hover-lift:hover {
-        transform: translateY(-0.25rem);
-        transition-property: all;
-        transition-duration: 300ms;
-      }
-      .filter-active {
-        background-color: #165DFF;
-        color: #fff;
-      }
-    }
-  </style>
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-transform {
+                transition-property: transform;
+                transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+                transition-duration: 300ms;
+            }
+            .hover-lift:hover {
+                transform: translateY(-0.25rem);
+                transition-property: all;
+                transition-duration: 300ms;
+            }
+            .filter-active {
+                background-color: #165DFF;
+                color: #fff;
+            }
+        }
+    </style>
 
     <style>
         html {
@@ -87,6 +85,13 @@
         .project-card.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+
+        /* 确保项目描述不被隐藏 */
+        .project-description {
+            display: block !important;
+            overflow: visible !important;
+            height: auto !important;
         }
     </style>
 </head>
@@ -140,7 +145,7 @@
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <!-- 项目筛选 -->
-            <div class="mb-12 text-center"><!-- 更改需替换data-filter -->
+            <div class="mb-12 text-center">
                 <div class="inline-flex flex-wrap justify-center gap-3">
                     <button
                         class="filter-btn filter-active px-5 py-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors text-sm font-medium"
@@ -160,42 +165,51 @@
                 </div>
             </div>
 
-            <!-- 项目列表（更换data-category以更改类型） -->
+            <!-- 项目列表 -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- 项目1 -->
-                <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
-                    data-category="web">
-                    <div class="h-56 overflow-hidden">
-                        <img src="./imgs/dmq.png" alt="点名器" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-sm font-medium bg-blue-100 text-primary px-3 py-1 rounded-full">网站</span>
-                            <div class="flex space-x-2">
-                                <a href="./projects/name-caller.html"
-                                    class="text-gray-500 hover:text-primary transition-colors">
-                                    <i class="fa fa-link"></i>
-                                </a>
+                <a href="./projects/name-caller.html">
+                    <div class="project-card visible bg-white rounded-xl shadow-md overflow-hidden hover-lift"
+                        data-category="web">
+                        <div class="h-56 overflow-hidden">
+                            <img src="./imgs/dmq.png" alt="点名器" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-3">
+                                <span
+                                    class="text-sm font-medium bg-blue-100 text-primary px-3 py-1 rounded-full">网站</span>
+                                <div class="flex space-x-2">
+                                    <a href="./projects/name-caller.html"
+                                        class="text-gray-500 hover:text-primary transition-colors">
+                                        <i class="fa fa-link"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <h3 class="text-xl font-semibold mb-2">课堂点名器</h3>
+                            <!-- 添加明确的类名确保描述可见 -->
+                            <p class="project-description text-gray-600 text-sm mb-4">
+                                基于HTML、CSS和JavaScript开发的全功能课堂点名器，支持名单导入、随机点名、历史记录查询等功能，界面简洁直观，操作便捷。
+                            </p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">HTML</span>
+                                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">CSS</span>
+                                <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">JavaScript</span>
                             </div>
                         </div>
-                        <h3 class="text-xl font-semibold mb-2">课堂点名器</h3>
-                        <p class="text-gray-600 text-sm mb-4">
-                            基于CSS开发的全功能点名器，支持文件导入等。
-                        </p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">HTML</span>
-                        </div>
                     </div>
-                </div>
+                </a>
+                <!-- 新项目添加地址 -->
+
 
                 <!-- 加载更多按钮 -->
-                <div class="text-center mt-16">
+                <div class="text-center mt-16 col-span-1 md:col-span-2 lg:col-span-3">
                     <button id="load-more"
                         class="inline-flex items-center bg-white hover:bg-gray-100 text-primary border border-primary font-medium py-3 px-8 rounded-lg transition-all hover-lift">
                         加载更多项目 <i class="fa fa-refresh ml-2"></i>
                     </button>
                 </div>
             </div>
+        </div>
     </section>
 
     <!-- 联系区域 -->
@@ -324,7 +338,7 @@
 
         // 加载更多项目
         const loadMoreBtn = document.getElementById('load-more');
-        let projectsLoaded = 9; // 当前已加载的项目数量
+        let projectsLoaded = 2; // 当前已加载的项目数量
 
         loadMoreBtn.addEventListener('click', function () {
             // 模拟加载更多项目
@@ -333,14 +347,18 @@
             setTimeout(() => {
                 // 模拟添加更多项目卡片
                 const projectGrid = document.querySelector('.grid');
+
                 // 如果加载了足够多的项目，隐藏加载更多按钮
-                if (projectsLoaded >= 18) {
+                if (projectsLoaded >= 6) {
                     loadMoreBtn.innerHTML = '已加载全部项目';
                     loadMoreBtn.disabled = true;
                     loadMoreBtn.classList.add('opacity-70', 'cursor-not-allowed');
                     loadMoreBtn.classList.remove('hover:bg-gray-100', 'hover-lift');
                 } else {
                     loadMoreBtn.innerHTML = '加载更多项目 <i class="fa fa-refresh ml-2"></i>';
+                    projectsLoaded++;
+
+                    // 这里可以添加新的项目卡片
                 }
             }, 1500);
         });
@@ -358,6 +376,5 @@
         });
     </script>
 </body>
-
 
 </html>
