@@ -1,0 +1,43 @@
+@layer utilities {
+  /* 自定义工具类 */
+  .content-auto {
+    content-visibility: auto;
+  }
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+  .avatar-animation {
+    @apply transition-all duration-500 ease-in-out hover:scale-105 hover:ring-4 hover:ring-primary/20;
+  }
+}
+
+/* 基础样式 */
+body {
+  scroll-behavior: smooth;
+}
+
+/* 侧边头像固定样式 */
+.sidebar-sticky {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 50;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.5s ease;
+}
+
+.sidebar-sticky.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .sidebar-sticky {
+    display: none;
+  }
+}
