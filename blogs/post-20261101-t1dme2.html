@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="我把所有的喜欢写进一条公式，从此每一秒，都有 250 颗小心思替我从心形边缘漏出来。">
+  <meta name="author" content="NullShade">
+  <meta name="keywords" content="HTML">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="粒子会散进黑夜，我喜欢你这件事不会">
+  <meta property="og:description" content="我把所有的喜欢写进一条公式，从此每一秒，都有 250 颗小心思替我从心形边缘漏出来。">
+  <meta property="og:image" content="https://eminent2009.github.io/data/blogs-imgs/1235fst.png">
+  <link rel="shortcut icon" href="../data/imgs/logo.png" type="image/x-icon">
+  <title>粒子会散进黑夜，我喜欢你这件事不会 | NullShade</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#4F46E5', secondary: '#F3F4F6', dark: '#1F2937' },
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"粒子会散进黑夜，我喜欢你这件事不会","description":"我把所有的喜欢写进一条公式，从此每一秒，都有 250 颗小心思替我从心形边缘漏出来。","datePublished":"2026-11-01","dateModified":"2026-11-01","author":{"@type":"Person","name":"NullShade"},"image":"https://eminent2009.github.io/data/blogs-imgs/1235fst.png","publisher":{"@type":"Person","name":"NullShade"}}</script>
+
+  <style>
+
+:root {
+  --primary: #4F46E5;
+  --primary-soft: #EEF2FF;
+  --ink: #1F2937;
+  --muted: #6B7280;
+  --paper: #FAFAF8;
+  --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+}
+html { scroll-behavior: smooth; }
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+#reading-progress {
+  position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+  z-index: 60; background: linear-gradient(90deg, #4F46E5, #8B5CF6);
+  transition: width 0.1s linear;
+}
+#site-nav { transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease; }
+#site-nav.is-solid {
+  background-color: rgba(250, 250, 248, 0.92);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 rgba(31, 41, 55, 0.08);
+}
+#site-nav.is-solid .nav-text { color: var(--ink); }
+#site-nav.is-solid .nav-sub { color: var(--muted); }
+.reveal { opacity: 0; transform: translateY(24px); animation: reveal-up 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; }
+@keyframes reveal-up { to { opacity: 1; transform: none; } }
+.display { font-family: var(--serif); letter-spacing: 0.01em; }
+
+/* ---------- 正文 ---------- */
+.article {
+  font-size: 1.0625rem;
+  line-height: 1.95;
+  color: #374151;
+  counter-reset: section;
+  overflow-wrap: break-word;
+}
+.article > *:first-child { margin-top: 0; }
+.article p { margin: 1.25rem 0; }
+.article strong { color: #111827; font-weight: 600; }
+.article a { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(79, 70, 229, 0.35); }
+.article a:hover { text-decoration-color: var(--primary); }
+/* 文章末尾的返回按钮：避免被 .article a 的正文链接颜色和下滑线覆盖 */
+.article .back-list a,
+.article .back-list a:hover {
+  color: #fff;
+  text-decoration: none;
+}
+.article .author-card a { text-decoration: none; }
+.article h1, .article h2, .article h3, .article h4 {
+  color: #111827;
+  scroll-margin-top: 6rem;
+}
+.article h1 { font-family: var(--serif); font-size: 2rem; line-height: 1.4; margin: 2.6rem 0 1.2rem; font-weight: 700; }
+.article h2 {
+  counter-increment: section;
+  font-family: var(--serif);
+  font-size: 1.75rem;
+  line-height: 1.4;
+  font-weight: 700;
+  margin: 3.5rem 0 1.25rem;
+}
+.article h2::before {
+  content: counter(section, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.45rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--primary);
+}
+.article h3 { font-size: 1.15rem; font-weight: 600; margin: 2rem 0 0.75rem; }
+.article h4 { font-size: 1rem; font-weight: 600; margin: 1.6rem 0 0.6rem; color: #374151; }
+.article ul { margin: 1.25rem 0; padding-left: 0; list-style: none; }
+.article ul li { position: relative; padding-left: 1.5rem; margin: 0.55rem 0; }
+.article ul li::before {
+  content: ""; position: absolute; left: 0.15rem; top: 0.85rem;
+  width: 6px; height: 6px; border-radius: 9999px; background: var(--primary);
+}
+.article ol { margin: 1.25rem 0; padding-left: 1.4rem; list-style: decimal; }
+.article ol li { margin: 0.55rem 0; padding-left: 0.25rem; }
+.article ol li::marker { color: var(--primary); font-weight: 600; }
+.article ul li.task-item { display: flex; align-items: flex-start; gap: 0.55rem; padding-left: 0; }
+.article ul li.task-item::before { display: none; }
+.article ul li.task-item input {
+  width: 0.95rem; height: 0.95rem; margin-top: 0.5rem;
+  accent-color: var(--primary); flex: 0 0 auto;
+}
+.article ul li.task-item span { flex: 1; }
+.article p code, .article li code, .article td code, .article h2 code, .article h3 code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em; color: #4338CA; background: var(--primary-soft);
+  padding: 0.12rem 0.38rem; border-radius: 0.3rem;
+}
+.article blockquote {
+  font-family: var(--serif); margin: 2rem 0; padding: 1rem 1.5rem;
+  border-left: 3px solid var(--primary); background: #fff;
+  border-radius: 0 0.5rem 0.5rem 0; color: #4B5563; font-size: 1.05rem;
+}
+.article blockquote p { margin: 0; }
+.article blockquote p + p { margin-top: 0.9rem; }
+.article .lead::first-letter {
+  float: left; font-family: var(--serif); font-size: 3.4rem; line-height: 0.9;
+  font-weight: 700; color: var(--primary); padding: 0.15rem 0.6rem 0 0;
+}
+.article hr { border: 0; height: 1px; margin: 2.6rem 0; background: #E5E7EB; }
+.article mark { background: #FEF3C7; color: inherit; padding: 0 0.16em; border-radius: 3px; }
+.article img { max-width: 100%; height: auto; border-radius: 0.6rem; }
+.article-figure { margin: 2.2rem 0; text-align: center; }
+.article-figure img {
+  width: 100%; border-radius: 0.7rem;
+  box-shadow: 0 18px 42px -26px rgba(15, 23, 42, 0.5);
+}
+.article-figure figcaption {
+  margin-top: 0.75rem; font-family: var(--serif);
+  font-size: 0.82rem; line-height: 1.6; color: #9CA3AF;
+}
+
+/* ---------- 提示块 ---------- */
+.callout {
+  display: flex; gap: 0.85rem; margin: 1.75rem 0; padding: 1rem 1.15rem;
+  border-radius: 0.6rem; border: 1px solid #E5E7EB; background: #fff;
+  font-size: 0.95rem; line-height: 1.8; color: #4B5563;
+}
+.callout > i { margin-top: 0.3rem; flex: 0 0 auto; }
+.callout p { margin: 0; }
+.callout .callout-body { min-width: 0; flex: 1; }
+.callout .callout-body > *:first-child { margin-top: 0; }
+.callout .callout-body > *:last-child { margin-bottom: 0; }
+.callout .callout-title { font-weight: 600; color: #111827; margin-bottom: 0.3rem; }
+.callout .callout-body ul, .callout .callout-body ol { margin: 0.5rem 0; }
+.callout.tip { border-left: 3px solid #10B981; background: #F0FDF4; }
+.callout.tip i { color: #059669; }
+.callout.warn { border-left: 3px solid #F59E0B; background: #FFFBEB; }
+.callout.warn i { color: #D97706; }
+.callout.info { border-left: 3px solid var(--primary); background: var(--primary-soft); }
+.callout.info i { color: var(--primary); }
+
+/* ---------- 代码块 ---------- */
+.code-block {
+  margin: 1.75rem 0; border-radius: 0.75rem; overflow: hidden;
+  background: #0F172A; box-shadow: 0 16px 40px -20px rgba(15, 23, 42, 0.55);
+}
+.code-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.55rem 0.9rem; background: #1E293B; color: #94A3B8;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem; letter-spacing: 0.03em;
+}
+.copy-btn {
+  border: 1px solid #334155; color: #CBD5E1; background: transparent;
+  border-radius: 0.35rem; padding: 0.15rem 0.55rem; font-size: 0.72rem;
+  cursor: pointer; transition: all 0.2s ease;
+}
+.copy-btn:hover { color: #fff; border-color: var(--primary); background: rgba(79, 70, 229, 0.25); }
+.code-block pre {
+  margin: 0; padding: 1rem 1.15rem; overflow-x: auto;
+  color: #E2E8F0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.82rem; line-height: 1.75; tab-size: 2;
+}
+.code-block code { font-family: inherit; background: none; padding: 0; }
+.code-block .cm { color: #64748B; font-style: italic; }
+.code-block .str { color: #86EFAC; }
+.code-block .kw { color: #93C5FD; }
+.code-block .num { color: #FCA5A5; }
+.code-block .fn { color: #C4B5FD; }
+.code-block .key { color: #7DD3FC; }
+.code-block .attr { color: #FCD34D; }
+.code-block .tag { color: #F472B6; }
+.code-block .punc { color: #94A3B8; }
+.code-block .dec { color: #FCD34D; }
+.code-block .var { color: #FDBA74; }
+
+/* ---------- 表格 ---------- */
+.table-wrap {
+  margin: 1.75rem 0; overflow-x: auto; border-radius: 0.5rem;
+  background: #fff; box-shadow: 0 1px 0 #E5E7EB;
+}
+.article .table-wrap table { margin: 0; }
+.article table {
+  width: 100%; border-collapse: collapse; font-size: 0.9rem;
+  line-height: 1.7; background: #fff; overflow: hidden;
+}
+.article th {
+  text-align: left; padding: 0.7rem 1rem; background: #F9FAFB;
+  color: #111827; font-weight: 600; border-bottom: 1px solid #E5E7EB;
+  white-space: nowrap;
+}
+.article td { padding: 0.7rem 1rem; border-bottom: 1px solid #F3F4F6; vertical-align: top; }
+.article tr:last-child td { border-bottom: none; }
+.article table th:focus, .article table td:focus {
+  outline: 2px solid rgba(79, 70, 229, 0.42);
+  outline-offset: -2px;
+  background: #F5F6FF;
+}
+.table-wrap { scrollbar-width: thin; scrollbar-color: #C7D2FE transparent; }
+.table-wrap::-webkit-scrollbar { height: 7px; }
+.table-wrap::-webkit-scrollbar-thumb { background: #C7D2FE; border-radius: 99px; }
+
+/* ---------- 思维导图 ---------- */
+.mindmap-block {
+  position: relative;
+  margin: 1.9rem 0;
+  border: 1px solid #E7E8F2;
+  border-radius: 0.85rem;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.055), transparent 46%),
+    linear-gradient(180deg, #FFFFFF 0%, #FCFCFF 100%);
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(17, 24, 39, 0.03);
+}
+.mindmap-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.55rem;
+  scrollbar-width: thin;
+  scrollbar-color: #C7D2FE transparent;
+}
+.mindmap-scroll::-webkit-scrollbar { height: 7px; }
+.mindmap-scroll::-webkit-scrollbar-thumb { background: #C7D2FE; border-radius: 99px; }
+.mindmap-svg {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: auto;
+  font-family: "Inter", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  user-select: none;
+}
+.mindmap-svg text { font-family: inherit; }
+.mindmap-empty {
+  padding: 2.4rem 1.2rem;
+  text-align: center;
+  color: #9CA3AF;
+  font-size: 0.82rem;
+}
+
+/* ---------- 目录（导出页使用） ---------- */
+#toc a {
+  display: block; padding: 0.35rem 0 0.35rem 0.9rem; margin-left: -1px;
+  border-left: 2px solid transparent; color: #9CA3AF; font-size: 0.85rem;
+  line-height: 1.5; text-decoration: none; transition: all 0.2s ease;
+}
+#toc a:hover { color: var(--primary); }
+#toc a.active { color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+#toc a.toc-sub { padding-left: 1.7rem; font-size: 0.78rem; }
+
+#back-to-top {
+  position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 40;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease; transform: translateY(10px);
+}
+#back-to-top.show { opacity: 1; pointer-events: auto; transform: none; }
+
+@media (max-width: 640px) {
+  .article { font-size: 1rem; line-height: 1.9; }
+  .article h2 { font-size: 1.5rem; margin-top: 3rem; }
+  .article .lead::first-letter { font-size: 2.9rem; }
+  .article-figure { margin: 1.8rem -0.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { animation: none; opacity: 1; transform: none; }
+  #reading-progress { transition: none; }
+}
+@media print {
+  #reading-progress, #site-nav, #back-to-top, aside, details, footer,
+  .author-card, .back-list, #toc, .copy-btn { display: none !important; }
+  body { background: #fff; }
+  main { padding: 0 !important; }
+  .article { max-width: none !important; font-size: 11pt; }
+  .article h2, .article h3 { break-after: avoid; }
+  .code-block, .callout, .article-figure, table { break-inside: avoid; }
+}
+
+  </style>
+</head>
+
+<body class="font-sans">
+<div id="reading-progress"></div>
+
+<header id="site-nav" class="fixed top-0 inset-x-0 z-40">
+  <div class="max-w-6xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
+    <a href="../index.html" class="nav-text flex items-center gap-2 text-white font-semibold tracking-wide">
+      <i class="fa-solid fa-arrow-left text-sm"></i>
+      <span>NullShade</span>
+      <span class="nav-sub hidden sm:inline text-white/60 font-normal">/ 博文</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm">
+      <a href="../index.html#blogs" class="nav-text text-white/80 hover:text-primary transition-colors">全部博文</a>
+      <a href="../index.html#mail" class="nav-text text-white/80 hover:text-primary transition-colors">联系我</a>
+    </nav>
+  </div>
+</header>
+
+<section class="relative h-[78vh] min-h-[560px] flex items-end overflow-hidden">
+  <img src="../data/blogs-imgs/1235fst.png" alt="粒子会散进黑夜，我喜欢你这件事不会 封面图" class="absolute inset-0 w-full h-full object-cover">
+  <div class="absolute inset-0 bg-gradient-to-t from-[#111827] via-[#111827]/75 to-[#111827]/25"></div>
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_25%,rgba(79,70,229,0.38),transparent_58%)]"></div>
+
+  <div class="relative w-full max-w-6xl mx-auto px-6 md:px-10 pb-14 text-white">
+    <p class="reveal text-xs md:text-sm uppercase tracking-[0.25em] text-white/70 mb-5">技术</p>
+    <h1 class="reveal display text-[clamp(2rem,5vw,3.4rem)] leading-[1.25] font-bold mb-5" style="animation-delay:0.08s">粒子会散进黑夜，我喜欢你这件事不会</h1>
+    <p class="reveal text-white/75 max-w-2xl text-base md:text-lg leading-relaxed mb-8" style="animation-delay:0.16s">我把所有的喜欢写进一条公式，从此每一秒，都有 250 颗小心思替我从心形边缘漏出来。</p>
+    <div class="reveal flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-white/70" style="animation-delay:0.24s">
+      <span class="flex items-center gap-2">
+        <img src="../data/imgs/avater.png" alt="NullShade 头像" class="w-8 h-8 rounded-full object-cover border border-white/30">
+        NullShade
+      </span>
+      <span class="flex items-center gap-1.5"><i class="fa-regular fa-calendar text-xs"></i>2026-11-01</span>
+      <span class="flex items-center gap-1.5"><i class="fa-regular fa-clock text-xs"></i>约 7 分钟阅读</span>
+      <span class="flex items-center gap-1.5"><i class="fa-solid fa-tag text-xs"></i>HTML</span>
+    </div>
+  </div>
+</section>
+
+<main class="max-w-6xl mx-auto px-6 md:px-10 py-14 md:py-20">
+  <div class="lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
+    <aside class="hidden lg:block">
+        <div class="sticky top-24">
+          <p class="text-[0.7rem] font-semibold tracking-[0.22em] text-gray-400 mb-4">目录</p>
+          <nav id="toc" class="border-l border-gray-200">
+            <a href="#一先看效果">一、先看效果</a>
+<a href="#二核心原理心形是怎么长出来的">二、核心原理：心形是怎么"长"出来的</a>
+<a href="#三整体代码结构">三、整体代码结构</a>
+<a href="#四粒子系统的三个关键设计">四、粒子系统的三个关键设计</a>
+<a href="#h-1-环形队列对象池不用-new-也能有-500-个粒子" class="toc-sub">1. 环形队列对象池：不用 new 也能有 500 个粒子</a>
+<a href="#h-2-物理模型速度-负加速度造出绽放感" class="toc-sub">2. 物理模型：速度 + 负加速度，造出"绽放"感</a>
+<a href="#h-3-缓动-渐隐粒子的生命曲线" class="toc-sub">3. 缓动 + 渐隐：粒子的"生命曲线"</a>
+<a href="#五动画主循环每一帧发生了什么">五、动画主循环：每一帧发生了什么</a>
+<a href="#六可调参数速查表">六、可调参数速查表</a>
+<a href="#七完整源码">七、完整源码</a>
+<a href="#八运行与部署">八、运行与部署</a>
+<a href="#九改造灵感">九、改造灵感</a>
+<a href="#结语">结语</a>
+          </nav>
+          <div class="mt-8 pt-6 border-t border-gray-200">
+            <p class="text-xs text-gray-400">阅读进度</p>
+            <p class="text-2xl font-semibold text-primary mt-1"><span id="toc-percent">0</span>%</p>
+          </div>
+        </div>
+      </aside>
+    <details class="lg:hidden mb-10 bg-white rounded-lg border border-gray-200 px-4 py-3">
+        <summary class="cursor-pointer text-sm font-semibold text-dark select-none">
+          <i class="fa-solid fa-list-ul text-primary mr-2"></i>本文目录
+        </summary>
+        <nav class="mt-3 space-y-2 text-sm text-gray-500">
+          <a href="#一先看效果" class="block hover:text-primary transition-colors">01 · 一、先看效果</a>
+<a href="#二核心原理心形是怎么长出来的" class="block hover:text-primary transition-colors">02 · 二、核心原理：心形是怎么"长"出来的</a>
+<a href="#三整体代码结构" class="block hover:text-primary transition-colors">03 · 三、整体代码结构</a>
+<a href="#四粒子系统的三个关键设计" class="block hover:text-primary transition-colors">04 · 四、粒子系统的三个关键设计</a>
+<a href="#h-1-环形队列对象池不用-new-也能有-500-个粒子" class="block hover:text-primary transition-colors pl-6 text-[0.82rem] text-gray-400">1. 环形队列对象池：不用 new 也能有 500 个粒子</a>
+<a href="#h-2-物理模型速度-负加速度造出绽放感" class="block hover:text-primary transition-colors pl-6 text-[0.82rem] text-gray-400">2. 物理模型：速度 + 负加速度，造出"绽放"感</a>
+<a href="#h-3-缓动-渐隐粒子的生命曲线" class="block hover:text-primary transition-colors pl-6 text-[0.82rem] text-gray-400">3. 缓动 + 渐隐：粒子的"生命曲线"</a>
+<a href="#五动画主循环每一帧发生了什么" class="block hover:text-primary transition-colors">05 · 五、动画主循环：每一帧发生了什么</a>
+<a href="#六可调参数速查表" class="block hover:text-primary transition-colors">06 · 六、可调参数速查表</a>
+<a href="#七完整源码" class="block hover:text-primary transition-colors">07 · 七、完整源码</a>
+<a href="#八运行与部署" class="block hover:text-primary transition-colors">08 · 八、运行与部署</a>
+<a href="#九改造灵感" class="block hover:text-primary transition-colors">09 · 九、改造灵感</a>
+<a href="#结语" class="block hover:text-primary transition-colors">10 · 结语</a>
+        </nav>
+      </details>
+
+    <article class="article min-w-0 max-w-[760px] ">
+<h1 id="canvas-爱心粒子动画全解析一个公式500-个粒子一次浪漫的绽放">Canvas 爱心粒子动画全解析：一个公式，500 个粒子，一次浪漫的绽放</h1>
+<blockquote><p class="lead">一段零依赖、纯原生 JavaScript 写成的爱心粒子动画：黑色全屏画布上，粉色心形轮廓不断向四周迸发粒子，粒子越飞越慢、渐渐淡去，循环往复。整份代码不到 200 行，却完整覆盖了参数方程、对象池、缓动动画这些经典前端技术。本文拆解它的数学内核与实现细节，你可以直接复制运行，也能照着参数表调出自己的版本。</p></blockquote>
+<hr>
+<h2 id="一先看效果">一、先看效果</h2>
+<p>动画的表现是这样的：</p>
+<p><a href="https://eminent404.github.io/canvas.html" target="_blank" rel="noopener"><strong>点此预览界面</strong></a></p>
+<ul><li>页面是一整块黑色背景，正中间有一个粉色心形轮廓；</li><li>心形的边缘不断"长出"小粒子，沿着"从心形中心指向该点"的方向向外飞；</li><li>粒子一边飞一边减速、一边变透明，最终消散；</li><li>旧的粒子消失，新的粒子不断补充，形成"绽放 → 消散 → 绽放"的循环。</li></ul>
+<p>视觉上像是心形在持续发光、向外抛洒光尘，适合用作博客的装饰、表白页或者桌面屏保。</p>
+<hr>
+<h2 id="二核心原理心形是怎么长出来的">二、核心原理：心形是怎么"长"出来的</h2>
+<p>整个动画的地基是一条数学公式——心形参数方程。代码里的 <code>pointOnHeart(t)</code> 用参数 <code>t</code>（取值范围 −π 到 π）算出心形轮廓上的每一个点：</p>
+<div class="code-block">
+      <div class="code-head"><span>HTML</span><button class="copy-btn" type="button">复制</button></div>
+      <pre><code class="language-html">x(t) = 160 · sin³(t)
+y(t) = 130 · cos(t) − 50 · cos(2t) − 20 · cos(3t) − 10 · cos(4t) + 25</code></pre>
+    </div>
+<p>对应代码：</p>
+<div class="code-block">
+      <div class="code-head"><span>JavaScript</span><button class="copy-btn" type="button">复制</button></div>
+      <pre><code class="language-javascript"><span class="kw">function</span> <span class="fn">pointOnHeart</span><span class="punc">(</span>t<span class="punc">)</span> <span class="punc">{</span>
+  <span class="kw">return</span> <span class="kw">new</span> <span class="fn">Point</span><span class="punc">(</span>
+    <span class="num">160</span> * Math<span class="punc">.</span><span class="fn">pow</span><span class="punc">(</span>Math<span class="punc">.</span><span class="fn">sin</span><span class="punc">(</span>t<span class="punc">)</span><span class="punc">,</span> <span class="num">3</span><span class="punc">)</span><span class="punc">,</span>
+    <span class="num">130</span> * Math<span class="punc">.</span><span class="fn">cos</span><span class="punc">(</span>t<span class="punc">)</span> - <span class="num">50</span> * Math<span class="punc">.</span><span class="fn">cos</span><span class="punc">(</span><span class="num">2</span> * t<span class="punc">)</span> - <span class="num">20</span> * Math<span class="punc">.</span><span class="fn">cos</span><span class="punc">(</span><span class="num">3</span> * t<span class="punc">)</span> - <span class="num">10</span> * Math<span class="punc">.</span><span class="fn">cos</span><span class="punc">(</span><span class="num">4</span> * t<span class="punc">)</span> + <span class="num">25</span>
+  <span class="punc">)</span><span class="punc">;</span>
+<span class="punc">}</span></code></pre>
+    </div>
+<p><code>sin³(t)</code> 负责让左右两瓣对称鼓起，那一串 <code>cos</code> 项则负责修出心尖和上沿的弧度。</p>
+<p>这条公式在代码里被用了两次：</p>
+<ol><li><strong>生成粒子贴图</strong>：先用一个离屏 canvas，把 <code>t</code> 从 −π 到 π 按 0.01 步长描出心形路径，填充粉色 <code>#ea80b0</code>，再把画布转成图片（<code>toDataURL</code>），作为每个粒子的"样子"；</li><li><strong>生成发射点</strong>：动画运行时，每帧从轮廓上随机取点（<code>Math.PI - 2 * Math.PI * Math.random()</code>），在该点位置发射新粒子。</li></ol>
+<blockquote><p>小知识：动画里那颗"心"其实不是画出来的——它是用公式算出来的。把公式里的系数改一改，心形就会变胖、变瘦、变歪，这是最好玩的地方。</p></blockquote>
+<hr>
+<h2 id="三整体代码结构">三、整体代码结构</h2>
+<p>整份代码可以拆成五个部分，分工非常清晰：</p>
+<div class="code-block">
+      <div class="code-head"><span>MERMAID</span><button class="copy-btn" type="button">复制</button></div>
+      <pre><code class="language-mermaid">flowchart LR
+    A<span class="punc">[</span><span class="str">"HTML / CSS&lt;br/&gt;黑色全屏背景 + canvas"</span><span class="punc">]</span> --&gt; B<span class="punc">[</span><span class="str">"settings 配置&lt;br/&gt;粒子数量·寿命·速度·效果·尺寸"</span><span class="punc">]</span>
+    B --&gt; C<span class="punc">[</span><span class="str">"Point 向量类&lt;br/&gt;坐标·克隆·长度·归一化"</span><span class="punc">]</span>
+    C --&gt; D<span class="punc">[</span><span class="str">"Particle 粒子类&lt;br/&gt;位置·速度·加速度·年龄"</span><span class="punc">]</span>
+    D --&gt; E<span class="punc">[</span><span class="str">"ParticlePool 粒子池&lt;br/&gt;环形队列·对象复用"</span><span class="punc">]</span>
+    E --&gt; F<span class="punc">[</span><span class="str">"主入口 IIFE&lt;br/&gt;心形公式·贴图·渲染循环"</span><span class="punc">]</span>
+    F --&gt; G<span class="punc">[</span><span class="str">"requestAnimationFrame&lt;br/&gt;逐帧执行"</span><span class="punc">]</span>
+    G --&gt; H<span class="punc">[</span><span class="str">"发射新粒子"</span><span class="punc">]</span>
+    H --&gt; E</code></pre>
+    </div>
+<div class="table-wrap"><table><thead><tr><th>模块</th><th>职责</th></tr></thead><tbody><tr><td><code>settings</code></td><td>全局参数：粒子数、寿命、速度、加速度系数、尺寸</td></tr><tr><td><code>Point</code></td><td>二维向量：坐标存储、克隆、求长度、归一化</td></tr><tr><td><code>Particle</code></td><td>单个粒子的物理状态与绘制逻辑</td></tr><tr><td><code>ParticlePool</code></td><td>粒子池：用环形队列复用对象，避免频繁 <code>new</code></td></tr><tr><td>主入口 IIFE</td><td>心形公式、粒子贴图、动画循环、窗口自适应</td></tr></tbody></table></div>
+<hr>
+<h2 id="四粒子系统的三个关键设计">四、粒子系统的三个关键设计</h2>
+<h3 id="h-1-环形队列对象池不用-new-也能有-500-个粒子">1. 环形队列对象池：不用 <code>new</code> 也能有 500 个粒子</h3>
+<p>如果每帧都 <code>new Particle()</code>，浏览器会不断分配内存、触发垃圾回收，动画很容易卡顿。这段代码用了<strong>对象池 + 环形队列</strong>：</p>
+<ul><li>初始化时一次性创建 500 个粒子对象，存进数组；</li><li>用两个指针管理：<code>firstActive</code>（最老的活跃粒子）和 <code>firstFree</code>（下一个空位）；</li><li>新粒子"复活"到 <code>firstFree</code> 指向的空位上，两个指针都做循环取模，像钟表一样转圈；</li><li>当某个粒子 <code>age &gt;= duration</code> 时，它不再被绘制，下一个新粒子会直接覆盖它的位置——对象被反复"复用"，全程零垃圾。</li></ul>
+<div class="code-block">
+      <div class="code-head"><span>代码</span><button class="copy-btn" type="button">复制</button></div>
+      <pre><code>
+firstActive ──► 活跃粒子区 ◄── firstFree
+      ▲                              │
+      └──────── 环形复用 ←───────────┘</code></pre>
+    </div>
+<h3 id="h-2-物理模型速度-负加速度造出绽放感">2. 物理模型：速度 + 负加速度，造出"绽放"感</h3>
+<p>每个粒子只有三样状态：位置、速度、加速度。每帧更新：</p>
+<div class="code-block">
+      <div class="code-head"><span>JavaScript</span><button class="copy-btn" type="button">复制</button></div>
+      <pre><code class="language-javascript">position += velocity * dt<span class="punc">;</span>   <span class="cm">// 移动</span>
+velocity += acceleration * dt<span class="punc">;</span> <span class="cm">// 变速</span></code></pre>
+    </div>
+<p>关键在初始化时这一句：</p>
+<div class="code-block">
+      <div class="code-head"><span>JavaScript</span><button class="copy-btn" type="button">复制</button></div>
+      <pre><code class="language-javascript"><span class="kw">this</span><span class="punc">.</span>acceleration<span class="punc">.</span>x = dx * settings<span class="punc">.</span>particles<span class="punc">.</span>effect<span class="punc">;</span>  <span class="cm">// effect = -0.75</span>
+<span class="kw">this</span><span class="punc">.</span>acceleration<span class="punc">.</span>y = dy * settings<span class="punc">.</span>particles<span class="punc">.</span>effect<span class="punc">;</span></code></pre>
+    </div>
+<p>加速度 = 初速度 × (−0.75)，也就是<strong>和运动方向相反</strong>。粒子刚出生时冲得最快，随后被"负加速度"持续刹车，越飞越慢。配合透明度渐隐，就有了"绽放后缓缓消散"的呼吸感。</p>
+<p>如果把 <code>effect</code> 调成正值，粒子会越飞越快、冲出屏幕；调成 −1 左右，粒子几乎飞不动，心形会显得更"凝聚"。</p>
+<h3 id="h-3-缓动-渐隐粒子的生命曲线">3. 缓动 + 渐隐：粒子的"生命曲线"</h3>
+<p>粒子在 <code>duration</code>（默认 2 秒）内走完一生，两个视觉参数随年龄变化：</p>
+<div class="code-block">
+      <div class="code-head"><span>JavaScript</span><button class="copy-btn" type="button">复制</button></div>
+      <pre><code class="language-javascript"><span class="kw">function</span> <span class="fn">ease</span><span class="punc">(</span>t<span class="punc">)</span> <span class="punc">{</span> <span class="kw">return</span> <span class="punc">(</span>--t<span class="punc">)</span> * t * t + <span class="num">1</span><span class="punc">;</span> <span class="punc">}</span>
+
+<span class="kw">var</span> size = image<span class="punc">.</span>width * <span class="fn">ease</span><span class="punc">(</span><span class="kw">this</span><span class="punc">.</span>age / settings<span class="punc">.</span>particles<span class="punc">.</span>duration<span class="punc">)</span><span class="punc">;</span>
+context<span class="punc">.</span>globalAlpha = <span class="num">1</span> - <span class="kw">this</span><span class="punc">.</span>age / settings<span class="punc">.</span>particles<span class="punc">.</span>duration<span class="punc">;</span></code></pre>
+    </div>
+<ul><li><strong>尺寸</strong>：经过缓动函数微调，粒子在生命周期中先略缩后复原，避免机械的匀速缩放；</li><li><strong>透明度</strong>：从 1 线性降到 0，粒子"淡入又淡出"，和黑色的背景融合得干净。</li></ul>
+<hr>
+<h2 id="五动画主循环每一帧发生了什么">五、动画主循环：每一帧发生了什么</h2>
+<p><code>requestAnimationFrame</code> 驱动整个循环，让动画跟随屏幕刷新率（通常 60 帧/秒）运行：</p>
+<div class="code-block">
+      <div class="code-head"><span>MERMAID</span><button class="copy-btn" type="button">复制</button></div>
+      <pre><code class="language-mermaid">flowchart TD
+    A<span class="punc">[</span><span class="str">"requestAnimationFrame(render)"</span><span class="punc">]</span> --&gt; B<span class="punc">[</span><span class="str">"计算 deltaTime&lt;br/&gt;（距上一帧的秒数）"</span><span class="punc">]</span>
+    B --&gt; C<span class="punc">[</span><span class="str">"按 粒子速率 × deltaTime&lt;br/&gt;生成若干新粒子"</span><span class="punc">]</span>
+    C --&gt; D<span class="punc">[</span><span class="str">"在心形轮廓随机取点&lt;br/&gt;沿径向赋初速度"</span><span class="punc">]</span>
+    D --&gt; E<span class="punc">[</span><span class="str">"粒子池 add：&lt;br/&gt;复用环形队列空位"</span><span class="punc">]</span>
+    E --&gt; F<span class="punc">[</span><span class="str">"update：位移积分&lt;br/&gt;负加速度减速"</span><span class="punc">]</span>
+    F --&gt; G<span class="punc">[</span><span class="str">"draw：按年龄&lt;br/&gt;缓动缩放 + 透明度渐隐"</span><span class="punc">]</span>
+    G --&gt; H<span class="punc">[</span><span class="str">"回收年龄 ≥ duration&lt;br/&gt;的粒子，腾出空位"</span><span class="punc">]</span>
+    H --&gt; A</code></pre>
+    </div>
+<p>配套的完整逻辑：</p>
+<div class="code-block">
+      <div class="code-head"><span>JavaScript</span><button class="copy-btn" type="button">复制</button></div>
+      <pre><code class="language-javascript"><span class="kw">function</span> <span class="fn">render</span><span class="punc">(</span><span class="punc">)</span> <span class="punc">{</span>
+  <span class="fn">requestAnimationFrame</span><span class="punc">(</span>render<span class="punc">)</span><span class="punc">;</span>              <span class="cm">// 下一帧</span>
+  <span class="kw">var</span> newTime = <span class="kw">new</span> <span class="fn">Date</span><span class="punc">(</span><span class="punc">)</span><span class="punc">.</span><span class="fn">getTime</span><span class="punc">(</span><span class="punc">)</span> / <span class="num">1000</span><span class="punc">,</span>
+      deltaTime = newTime - <span class="punc">(</span>time || newTime<span class="punc">)</span><span class="punc">;</span>
+  time = newTime<span class="punc">;</span>
+
+  context<span class="punc">.</span><span class="fn">clearRect</span><span class="punc">(</span><span class="num">0</span><span class="punc">,</span> <span class="num">0</span><span class="punc">,</span> canvas<span class="punc">.</span>width<span class="punc">,</span> canvas<span class="punc">.</span>height<span class="punc">)</span><span class="punc">;</span>  <span class="cm">// 清屏</span>
+
+  <span class="kw">var</span> amount = particleRate * deltaTime<span class="punc">;</span>      <span class="cm">// 本帧要发射的粒子数</span>
+  <span class="kw">for</span> <span class="punc">(</span><span class="kw">var</span> i = <span class="num">0</span><span class="punc">;</span> i &lt; amount<span class="punc">;</span> i++<span class="punc">)</span> <span class="punc">{</span>
+    <span class="kw">var</span> pos = <span class="fn">pointOnHeart</span><span class="punc">(</span>Math<span class="punc">.</span>PI - <span class="num">2</span> * Math<span class="punc">.</span>PI * Math<span class="punc">.</span><span class="fn">random</span><span class="punc">(</span><span class="punc">)</span><span class="punc">)</span><span class="punc">;</span> <span class="cm">// 轮廓随机点</span>
+    <span class="kw">var</span> dir = pos<span class="punc">.</span><span class="fn">clone</span><span class="punc">(</span><span class="punc">)</span><span class="punc">.</span><span class="fn">length</span><span class="punc">(</span>settings<span class="punc">.</span>particles<span class="punc">.</span>velocity<span class="punc">)</span><span class="punc">;</span>     <span class="cm">// 径向初速</span>
+    particles<span class="punc">.</span><span class="fn">add</span><span class="punc">(</span>canvas<span class="punc">.</span>width / <span class="num">2</span> + pos<span class="punc">.</span>x<span class="punc">,</span> canvas<span class="punc">.</span>height / <span class="num">2</span> - pos<span class="punc">.</span>y<span class="punc">,</span> dir<span class="punc">.</span>x<span class="punc">,</span> -dir<span class="punc">.</span>y<span class="punc">)</span><span class="punc">;</span>
+  <span class="punc">}</span>
+
+  particles<span class="punc">.</span><span class="fn">update</span><span class="punc">(</span>deltaTime<span class="punc">)</span><span class="punc">;</span>   <span class="cm">// 更新所有活跃粒子</span>
+  particles<span class="punc">.</span><span class="fn">draw</span><span class="punc">(</span>context<span class="punc">,</span> image<span class="punc">)</span><span class="punc">;</span> <span class="cm">// 绘制所有活跃粒子</span>
+<span class="punc">}</span></code></pre>
+    </div>
+<p>几个值得注意的细节：</p>
+<ul><li><code>particleRate = 粒子数 / 寿命 = 500 / 2 = 250</code>，即<strong>每秒钟发射 250 个粒子</strong>，配合 2 秒寿命，屏幕上始终约 500 个粒子在飞，不多不少；</li><li>发射点的坐标做了居中处理（<code>canvas.width / 2 + pos.x</code>），所以心形永远在画布正中间；</li><li>粒子初速度的方向取自轮廓点本身的方向（<code>pos.clone().length(velocity)</code>），也就是"从心形中心指向该点"的方向，天然向外。</li></ul>
+<hr>
+<h2 id="六可调参数速查表">六、可调参数速查表</h2>
+<p>所有效果参数都集中在 <code>settings.particles</code> 里，改这里就够了：</p>
+<div class="table-wrap"><table><thead><tr><th>参数</th><th>默认值</th><th>作用</th><th>怎么调</th></tr></thead><tbody><tr><td><code>length</code></td><td><code>500</code></td><td>粒子池容量 = 同时存在的粒子数上限</td><td>调大更密集绚丽，低配设备调小（如 200）更流畅</td></tr><tr><td><code>duration</code></td><td><code>2</code></td><td>单个粒子存活秒数</td><td>调大拖尾更长、更"绵延"；调小更干脆</td></tr><tr><td><code>velocity</code></td><td><code>100</code></td><td>粒子初速度（像素/秒）</td><td>调大绽放更炸裂，调小更轻柔</td></tr><tr><td><code>effect</code></td><td><code>-0.75</code></td><td>加速度系数，负值=减速</td><td>越接近 0 飞得越远；越接近 −1 越早停下</td></tr><tr><td><code>size</code></td><td><code>30</code></td><td>粒子贴图边长（像素）</td><td>调大粒子更粗壮，调小更细腻如星光</td></tr></tbody></table></div>
+<p><strong>换颜色</strong>：改粒子贴图的填充色 <code>context.fillStyle = '#ea80b0'</code>，想换什么色就换什么色（比如纯白变"雪花心"，金色变"流光心"）。</p>
+<hr>
+<h2 id="七完整源码">七、完整源码</h2>
+<p>把下面这份 HTML 保存成 <code>.html</code> 文件，双击即可在浏览器中看到效果。</p>
+<div class="code-block">
+      <div class="code-head"><span>HTML</span><button class="copy-btn" type="button">复制</button></div>
+      <pre><code class="language-html">&lt;!DOCTYPE HTML PUBLIC <span class="str">"-//W3C//DTD HTML 4.0 Transitional//EN"</span><span class="punc">&gt;</span>
+<span class="tag">&lt;HTML</span><span class="punc">&gt;</span>
+<span class="tag">&lt;HEAD</span><span class="punc">&gt;</span>
+<span class="tag">&lt;TITLE</span><span class="punc">&gt;</span> 爱心代码 <span class="tag">&lt;/TITLE</span><span class="punc">&gt;</span>
+<span class="tag">&lt;style</span><span class="punc">&gt;</span>
+  html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    background: #000;
+  }
+  canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+<span class="tag">&lt;/style</span><span class="punc">&gt;</span>
+<span class="tag">&lt;/HEAD</span><span class="punc">&gt;</span>
+<span class="tag">&lt;BODY</span><span class="punc">&gt;</span>
+<span class="tag">&lt;canvas</span> <span class="attr">id</span>=<span class="str">"pinkboard"</span><span class="punc">&gt;</span><span class="tag">&lt;/canvas</span><span class="punc">&gt;</span>
+<span class="tag">&lt;script</span><span class="punc">&gt;</span>
+/*
+ * Settings
+ */
+var <span class="attr">settings</span> = {
+  particles: {
+    length:   500, // maximum amount of particles
+    duration:   2, // particle duration in sec
+    velocity: 100, // particle velocity in pixels/sec
+    effect: -0.75, // play with this for a nice effect
+    size:      30, // particle size in pixels
+  },
+};
+
+/*
+ * RequestAnimationFrame polyfill by Erik Möller
+ */
+(function(){
+  var <span class="attr">b</span> = 0;
+  var <span class="attr">c</span> = [<span class="str">"ms"</span>, <span class="str">"moz"</span>, <span class="str">"webkit"</span>, <span class="str">"o"</span>];
+  for (var <span class="attr">a</span> = 0; a &lt; c.length &amp;&amp; !window.requestAnimationFrame; ++a) {
+    <span class="attr">window.requestAnimationFrame</span> = window[c[a] + <span class="str">"RequestAnimationFrame"</span>];
+    <span class="attr">window.cancelAnimationFrame</span> = window[c[a] + <span class="str">"CancelAnimationFrame"</span>] ||
+      window[c[a] + <span class="str">"CancelRequestAnimationFrame"</span>];
+  }
+  if (!window.requestAnimationFrame) {
+    <span class="attr">window.requestAnimationFrame</span> = function(h) {
+      var <span class="attr">d</span> = new Date().getTime();
+      var <span class="attr">f</span> = Math.max(0, 16 - (d - b));
+      var <span class="attr">g</span> = window.setTimeout(function(){ h(d + f); }, f);
+      <span class="attr">b</span> = d + f;
+      return g;
+    };
+  }
+  if (!window.cancelAnimationFrame) {
+    <span class="attr">window.cancelAnimationFrame</span> = function(d){ clearTimeout(d); };
+  }
+}());
+
+/*
+ * Point class
+ */
+var <span class="attr">Point</span> = (function() {
+  function Point(x, y) {
+    <span class="attr">this.x</span> = (typeof x !== <span class="str">'undefined'</span>) ? x : 0;
+    <span class="attr">this.y</span> = (typeof y !== <span class="str">'undefined'</span>) ? y : 0;
+  }
+  <span class="attr">Point.prototype.clone</span> = function() {
+    return new Point(this.x, this.y);
+  };
+  <span class="attr">Point.prototype.length</span> = function(length) {
+    if (typeof <span class="attr">length</span> == <span class="str">'undefined'</span>)
+      return Math.sqrt(this.x * this.x + this.y * this.y);
+    this.normalize();
+    this.x *= length;
+    this.y *= length;
+    return this;
+  };
+  <span class="attr">Point.prototype.normalize</span> = function() {
+    var <span class="attr">length</span> = this.length();
+    this.x /= length;
+    this.y /= length;
+    return this;
+  };
+  return Point;
+})();
+
+/*
+ * Particle class
+ */
+var <span class="attr">Particle</span> = (function() {
+  function Particle() {
+    <span class="attr">this.position</span> = new Point();
+    <span class="attr">this.velocity</span> = new Point();
+    <span class="attr">this.acceleration</span> = new Point();
+    <span class="attr">this.age</span> = 0;
+  }
+  <span class="attr">Particle.prototype.initialize</span> = function(x, y, dx, dy) {
+    <span class="attr">this.position.x</span> = x;
+    <span class="attr">this.position.y</span> = y;
+    <span class="attr">this.velocity.x</span> = dx;
+    <span class="attr">this.velocity.y</span> = dy;
+    <span class="attr">this.acceleration.x</span> = dx * settings.particles.effect;
+    <span class="attr">this.acceleration.y</span> = dy * settings.particles.effect;
+    <span class="attr">this.age</span> = 0;
+  };
+  <span class="attr">Particle.prototype.update</span> = function(deltaTime) {
+    this.position.x += this.velocity.x * deltaTime;
+    this.position.y += this.velocity.y * deltaTime;
+    this.velocity.x += this.acceleration.x * deltaTime;
+    this.velocity.y += this.acceleration.y * deltaTime;
+    this.age += deltaTime;
+  };
+  <span class="attr">Particle.prototype.draw</span> = function(context, image) {
+    function ease(t) {
+      return (--t) * t * t + 1;
+    }
+    var <span class="attr">size</span> = image.width * ease(this.age / settings.particles.duration);
+    <span class="attr">context.globalAlpha</span> = 1 - this.age / settings.particles.duration;
+    context.drawImage(image, this.position.x - size / 2,
+      this.position.y - size / 2, size, size);
+  };
+  return Particle;
+})();
+
+/*
+ * ParticlePool class
+ */
+var <span class="attr">ParticlePool</span> = (function() {
+  var particles,
+      <span class="attr">firstActive</span> = 0,
+      <span class="attr">firstFree</span> = 0,
+      <span class="attr">duration</span> = settings.particles.duration;
+
+  function ParticlePool(length) {
+    <span class="attr">particles</span> = new Array(length);
+    for (var <span class="attr">i</span> = 0; i &lt; particles.length; i++)
+      particles[i] = new Particle();
+  }
+  <span class="attr">ParticlePool.prototype.add</span> = function(x, y, dx, dy) {
+    particles[firstFree].initialize(x, y, dx, dy);
+    firstFree++;
+    if (<span class="attr">firstFree</span> == particles.length) <span class="attr">firstFree</span> = 0;
+    if (<span class="attr">firstActive</span> == firstFree) firstActive++;
+    if (<span class="attr">firstActive</span> == particles.length) <span class="attr">firstActive</span> = 0;
+  };
+  <span class="attr">ParticlePool.prototype.update</span> = function(deltaTime) {
+    var i;
+    if (firstActive &lt; firstFree) {
+      for (<span class="attr">i</span> = firstActive; i &lt; firstFree; i++)
+        particles[i].update(deltaTime);
+    }
+    if (firstFree &lt; firstActive) {
+      for (<span class="attr">i</span> = firstActive; i &lt; particles.length; i++)
+        particles[i].update(deltaTime);
+      for (<span class="attr">i</span> = 0; i &lt; firstFree; i++)
+        particles[i].update(deltaTime);
+    }
+    while (particles[firstActive].age <span class="punc">&gt;</span>= duration &amp;&amp; firstActive != firstFree) {
+      firstActive++;
+      if (<span class="attr">firstActive</span> == particles.length) <span class="attr">firstActive</span> = 0;
+    }
+  };
+  <span class="attr">ParticlePool.prototype.draw</span> = function(context, image) {
+    var i;
+    if (firstActive &lt; firstFree) {
+      for (<span class="attr">i</span> = firstActive; i &lt; firstFree; i++)
+        particles[i].draw(context, image);
+    }
+    if (firstFree &lt; firstActive) {
+      for (<span class="attr">i</span> = firstActive; i &lt; particles.length; i++)
+        particles[i].draw(context, image);
+      for (<span class="attr">i</span> = 0; i &lt; firstFree; i++)
+        particles[i].draw(context, image);
+    }
+  };
+  return ParticlePool;
+})();
+
+/*
+ * Putting it all together
+ */
+(function(canvas) {
+  var <span class="attr">context</span> = canvas.getContext(<span class="str">'2d'</span>),
+      <span class="attr">particles</span> = new ParticlePool(settings.particles.length),
+      <span class="attr">particleRate</span> = settings.particles.length / settings.particles.duration,
+      time;
+
+  function pointOnHeart(t) {
+    return new Point(
+      160 * Math.pow(Math.sin(t), 3),
+      130 * Math.cos(t) - 50 * Math.cos(2 * t) -
+        20 * Math.cos(3 * t) - 10 * Math.cos(4 * t) + 25
+    );
+  }
+
+  var <span class="attr">image</span> = (function() {
+    var <span class="attr">canvas</span> = document.createElement(<span class="str">'canvas'</span>),
+        <span class="attr">context</span> = canvas.getContext(<span class="str">'2d'</span>);
+    <span class="attr">canvas.width</span> = settings.particles.size;
+    <span class="attr">canvas.height</span> = settings.particles.size;
+
+    function to(t) {
+      var <span class="attr">point</span> = pointOnHeart(t);
+      <span class="attr">point.x</span> = settings.particles.size / 2 + point.x * settings.particles.size / 350;
+      <span class="attr">point.y</span> = settings.particles.size / 2 - point.y * settings.particles.size / 350;
+      return point;
+    }
+
+    context.beginPath();
+    var <span class="attr">t</span> = -Math.PI;
+    var <span class="attr">point</span> = to(t);
+    context.moveTo(point.x, point.y);
+    while (t &lt; Math.PI) {
+      t += 0.01;
+      <span class="attr">point</span> = to(t);
+      context.lineTo(point.x, point.y);
+    }
+    context.closePath();
+    <span class="attr">context.fillStyle</span> = <span class="str">'#ea80b0'</span>;
+    context.fill();
+
+    var <span class="attr">image</span> = new Image();
+    <span class="attr">image.src</span> = canvas.toDataURL();
+    return image;
+  })();
+
+  function render() {
+    requestAnimationFrame(render);
+    var <span class="attr">newTime</span> = new Date().getTime() / 1000,
+        <span class="attr">deltaTime</span> = newTime - (time || newTime);
+    <span class="attr">time</span> = newTime;
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    var <span class="attr">amount</span> = particleRate * deltaTime;
+    for (var <span class="attr">i</span> = 0; i &lt; amount; i++) {
+      var <span class="attr">pos</span> = pointOnHeart(Math.PI - 2 * Math.PI * Math.random());
+      var <span class="attr">dir</span> = pos.clone().length(settings.particles.velocity);
+      particles.add(canvas.width / 2 + pos.x, canvas.height / 2 - pos.y,
+        dir.x, -dir.y);
+    }
+
+    particles.update(deltaTime);
+    particles.draw(context, image);
+  }
+
+  function onResize() {
+    <span class="attr">canvas.width</span> = canvas.clientWidth;
+    <span class="attr">canvas.height</span> = canvas.clientHeight;
+  }
+
+  <span class="attr">window.onresize</span> = onResize;
+
+  setTimeout(function() {
+    onResize();
+    render();
+  }, 10);
+})(document.getElementById(<span class="str">'pinkboard'</span>));
+<span class="tag">&lt;/script</span><span class="punc">&gt;</span>
+<span class="tag">&lt;/BODY</span><span class="punc">&gt;</span>
+<span class="tag">&lt;/HTML</span><span class="punc">&gt;</span></code></pre>
+    </div>
+<hr>
+<h2 id="八运行与部署">八、运行与部署</h2>
+<div class="table-wrap"><table><thead><tr><th>场景</th><th>做法</th></tr></thead><tbody><tr><td>本地查看</td><td>保存为 <code>heart.html</code>，双击用浏览器打开即可</td></tr><tr><td>嵌入网页</td><td>把 <code>&lt;canvas id="pinkboard"&gt;</code> 和 <code>&lt;script&gt;</code> 放进你的页面，CSS 里给 canvas 设全屏定位即可</td></tr><tr><td>部署到博客</td><td>整份 HTML 上传到 GitHub Pages / Vercel / 任意静态空间，访问链接即得</td></tr><tr><td>移动端优化</td><td>手机上把 <code>length</code> 调到 200~300、<code>size</code> 调到 20，帧率更稳</td></tr></tbody></table></div>
+<p>代码没有任何外部依赖，不需要 npm、不需要构建，天然适合直接挂到任意静态博客上。</p>
+<hr>
+<h2 id="九改造灵感">九、改造灵感</h2>
+<p>照着这套结构，可以很快改出自己的版本：</p>
+<ol><li><strong>让心形"坍缩"</strong>：把 <code>effect</code> 从负值改成正数，粒子会加速飞向远处然后消失，视觉变成"炸开"；</li><li><strong>换图形</strong>：把 <code>pointOnHeart</code> 换成其他参数方程（比如星形线、蝴蝶曲线），粒子贴图和发射点会同步变成新图形；</li><li><strong>加交互</strong>：监听鼠标位置，让心形跟随鼠标移动，或在点击处额外喷发一簇粒子；</li><li><strong>多色渐变</strong>：按粒子年龄切换颜色，让淡出过程更梦幻；</li><li><strong>改文字心</strong>：用 <code>fillText</code> 在心形路径内写上名字，就成了独一无二的表白页。</li></ol>
+<hr>
+<h2 id="结语">结语</h2>
+<p>这段代码最迷人的地方在于：浪漫的视觉效果，背后只是一条参数方程、一个对象池和一个 <code>requestAnimationFrame</code> 循环。三个经典的前端知识点，合成了一段两秒一次的"绽放"。</p>
+<p>如果你想把它放进自己的博客、或者做成表白页送给重要的人，直接复制上面的完整源码就行——愿你的代码永远浪漫。</p>
+<hr>
+<p><em>本文基于一份公开流传的 Canvas 爱心粒子动画源码进行原理拆解与注释整理，代码可自由修改、使用。<a href="https://developer.aliyun.com/article/1105889" target="_blank" rel="noopener">参考文献</a></em></p>
+
+      <div class="mt-16 p-6 md:p-8 bg-white rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row sm:items-center gap-5 author-card">
+        <img src="../data/imgs/avater.png" alt="NullShade" class="w-16 h-16 rounded-full object-cover border-2 border-primary/20">
+        <div class="flex-1">
+          <p class="font-semibold text-dark mb-1">NullShade</p>
+          <p class="text-sm text-gray-500 leading-relaxed">前端爱好者，喜欢把折腾过程写下来。海内存知己，天涯若比邻。</p>
+        </div>
+        <div class="flex gap-4 text-primary text-lg">
+          <a href="https://github.com/eminent2009" class="hover:text-primary/70 transition-colors" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+<a href="https://space.bilibili.com/677771474" class="hover:text-primary/70 transition-colors" target="_blank" rel="noopener" aria-label="Bilibili"><i class="fa-brands fa-bilibili"></i></a>
+<a href="../index.html#mail" class="hover:text-primary/70 transition-colors" aria-label="邮箱"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div>
+
+      <div class="mt-10 back-list">
+        <a href="../index.html#blogs" class="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          返回博文列表
+        </a>
+      </div>
+    </article>
+  </div>
+</main>
+
+<footer class="py-10 px-6 bg-dark text-gray-400 text-sm">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <p>© 2026 NullShade - 保留所有权利</p>
+    <div class="flex items-center gap-5">
+      <a href="https://github.com/eminent2009" class="hover:text-white transition-colors" target="_blank" rel="noopener">GitHub</a>
+<a href="https://space.bilibili.com/677771474" class="hover:text-white transition-colors" target="_blank" rel="noopener">Bilibili</a>
+<a href="../index.html#mail" class="hover:text-white transition-colors">邮箱</a>
+    </div>
+  </div>
+</footer>
+
+<button id="back-to-top" type="button" aria-label="返回顶部"
+        class="w-11 h-11 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-colors">
+  <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<script>
+  (function () {
+    var progressBar = document.getElementById('reading-progress');
+    var percentText = document.getElementById('toc-percent');
+    var nav = document.getElementById('site-nav');
+    var backToTop = document.getElementById('back-to-top');
+    var ticking = false;
+
+    function onScroll() {
+      var scrollTop = window.scrollY;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var percent = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+      progressBar.style.width = percent + '%';
+      if (percentText) percentText.textContent = Math.round(percent);
+      nav.classList.toggle('is-solid', scrollTop > 80);
+      backToTop.classList.toggle('show', scrollTop > 600);
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        window.requestAnimationFrame(onScroll);
+        ticking = true;
+      }
+    });
+    onScroll();
+
+    backToTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    var tocLinks = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+    var headings = tocLinks.map(function (link) {
+      return document.getElementById(link.getAttribute('href').slice(1));
+    }).filter(Boolean);
+
+    if ('IntersectionObserver' in window && headings.length) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          tocLinks.forEach(function (link) {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+          });
+        });
+      }, { rootMargin: '0px 0px -70% 0px', threshold: 0 });
+      headings.forEach(function (heading) { observer.observe(heading); });
+    }
+
+    document.querySelectorAll('.copy-btn').forEach(function (button) {
+      button.addEventListener('click', async function () {
+        var pre = button.closest('.code-block').querySelector('pre');
+        var text = pre ? pre.innerText : '';
+        var original = button.textContent;
+        button.textContent = '已复制';
+        setTimeout(function () { button.textContent = original; }, 2000);
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (error) {
+          var textarea = document.createElement('textarea');
+          textarea.value = text;
+          textarea.style.position = 'fixed';
+          textarea.style.opacity = '0';
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          textarea.remove();
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="从零开始搭建一个可部署的个人主页：HTML 骨架、Tailwind 样式、响应式布局、JSON 数据驱动、分页与 GitHub Pages 部署的完整记录。">
+  <link rel="shortcut icon" href="../data/imgs/logo.png" type="image/x-icon">
+  <title>零基础搭建个人主页：从 0 到 1 | NullShade</title>
+
+  <!-- Tailwind CSS（与首页保持同一套配置） -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome 图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+
+  <script>
+    // 与首页一致的 Tailwind 主题扩展：主色靛蓝、深色底、无衬线字体
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4F46E5',
+            secondary: '#F3F4F6',
+            dark: '#1F2937',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ============================================================
+       文章页专属样式
+       说明：Tailwind CDN 不会处理外部 CSS 中的 @apply，
+       因此这里全部使用原生 CSS，避免样式失效。
+       ============================================================ */
+
+    :root {
+      --primary: #4F46E5;
+      --primary-soft: #EEF2FF;
+      --ink: #1F2937;
+      --muted: #6B7280;
+      --paper: #FAFAF8;
+      --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--paper);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 顶部阅读进度条 */
+    #reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      z-index: 60;
+      background: linear-gradient(90deg, #4F46E5, #8B5CF6);
+      transition: width 0.1s linear;
+    }
+
+    /* 顶部导航：默认透明叠在封面上，滚动后变成浅色毛玻璃 */
+    #site-nav {
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+    }
+    #site-nav.is-solid {
+      background-color: rgba(250, 250, 248, 0.92);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(31, 41, 55, 0.08);
+    }
+    #site-nav.is-solid .nav-text {
+      color: var(--ink);
+    }
+    #site-nav.is-solid .nav-sub {
+      color: var(--muted);
+    }
+
+    /* 首屏入场动画 */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: reveal-up 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+    }
+    @keyframes reveal-up {
+      to { opacity: 1; transform: none; }
+    }
+
+    /* 中型标题使用宋体，和正文形成编辑感对比 */
+    .display {
+      font-family: var(--serif);
+      letter-spacing: 0.01em;
+    }
+
+    /* 正文排版 */
+    .article {
+      font-size: 1.0625rem;
+      line-height: 1.95;
+      color: #374151;
+      counter-reset: section;
+    }
+    .article p {
+      margin: 1.25rem 0;
+    }
+    .article strong {
+      color: #111827;
+      font-weight: 600;
+    }
+    .article h2 {
+      counter-increment: section;
+      font-family: var(--serif);
+      font-size: 1.75rem;
+      line-height: 1.4;
+      font-weight: 700;
+      color: #111827;
+      margin: 3.5rem 0 1.25rem;
+      scroll-margin-top: 6rem;
+    }
+    .article h2::before {
+      content: counter(section, decimal-leading-zero);
+      display: block;
+      margin-bottom: 0.45rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      color: var(--primary);
+    }
+    .article h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #1F2937;
+      margin: 2rem 0 0.75rem;
+      scroll-margin-top: 6rem;
+    }
+    .article ul {
+      margin: 1.25rem 0;
+      padding-left: 0;
+      list-style: none;
+    }
+    .article ul li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin: 0.55rem 0;
+    }
+    .article ul li::before {
+      content: "";
+      position: absolute;
+      left: 0.15rem;
+      top: 0.85rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background: var(--primary);
+    }
+    .article ol {
+      margin: 1.25rem 0;
+      padding-left: 1.4rem;
+      list-style: decimal;
+    }
+    .article ol li {
+      margin: 0.55rem 0;
+      padding-left: 0.25rem;
+    }
+    .article ol li::marker {
+      color: var(--primary);
+      font-weight: 600;
+    }
+    /* 行内代码 */
+    .article p code,
+    .article li code,
+    .article td code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.85em;
+      color: #4338CA;
+      background: var(--primary-soft);
+      padding: 0.12rem 0.38rem;
+      border-radius: 0.3rem;
+    }
+    /* 引用块 */
+    .article blockquote {
+      font-family: var(--serif);
+      margin: 2rem 0;
+      padding: 1rem 1.5rem;
+      border-left: 3px solid var(--primary);
+      background: #fff;
+      border-radius: 0 0.5rem 0.5rem 0;
+      color: #4B5563;
+      font-size: 1.05rem;
+    }
+    .article blockquote p {
+      margin: 0;
+    }
+    /* 首段首字下沉 */
+    .article .lead::first-letter {
+      float: left;
+      font-family: var(--serif);
+      font-size: 3.4rem;
+      line-height: 0.9;
+      font-weight: 700;
+      color: var(--primary);
+      padding: 0.15rem 0.6rem 0 0;
+    }
+
+    /* 提示块 */
+    .callout {
+      display: flex;
+      gap: 0.85rem;
+      margin: 1.75rem 0;
+      padding: 1rem 1.15rem;
+      border-radius: 0.6rem;
+      border: 1px solid #E5E7EB;
+      background: #fff;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #4B5563;
+    }
+    .callout i {
+      margin-top: 0.3rem;
+    }
+    .callout p { margin: 0; }
+    .callout.tip { border-left: 3px solid #10B981; background: #F0FDF4; }
+    .callout.tip i { color: #059669; }
+    .callout.warn { border-left: 3px solid #F59E0B; background: #FFFBEB; }
+    .callout.warn i { color: #D97706; }
+    .callout.info { border-left: 3px solid var(--primary); background: var(--primary-soft); }
+    .callout.info i { color: var(--primary); }
+
+    /* 代码块 */
+    .code-block {
+      margin: 1.75rem 0;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background: #0F172A;
+      box-shadow: 0 16px 40px -20px rgba(15, 23, 42, 0.55);
+    }
+    .code-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 0.9rem;
+      background: #1E293B;
+      color: #94A3B8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.03em;
+    }
+    .copy-btn {
+      border: 1px solid #334155;
+      color: #CBD5E1;
+      background: transparent;
+      border-radius: 0.35rem;
+      padding: 0.15rem 0.55rem;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .copy-btn:hover {
+      color: #fff;
+      border-color: var(--primary);
+      background: rgba(79, 70, 229, 0.25);
+    }
+    .code-block pre {
+      margin: 0;
+      padding: 1rem 1.15rem;
+      overflow-x: auto;
+      color: #E2E8F0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.82rem;
+      line-height: 1.75;
+    }
+    .code-block .cm { color: #64748B; }      /* 注释 */
+    .code-block .str { color: #86EFAC; }     /* 字符串 */
+    .code-block .kw { color: #93C5FD; }      /* 关键字 */
+
+    /* 表格 */
+    .article table {
+      width: 100%;
+      margin: 1.75rem 0;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      background: #fff;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 1px 0 #E5E7EB;
+    }
+    .article th {
+      text-align: left;
+      padding: 0.7rem 1rem;
+      background: #F9FAFB;
+      color: #111827;
+      font-weight: 600;
+      border-bottom: 1px solid #E5E7EB;
+      white-space: nowrap;
+    }
+    .article td {
+      padding: 0.7rem 1rem;
+      border-bottom: 1px solid #F3F4F6;
+      vertical-align: top;
+    }
+    .article tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* 目录 */
+    #toc a {
+      display: block;
+      padding: 0.35rem 0 0.35rem 0.9rem;
+      margin-left: -1px;
+      border-left: 2px solid transparent;
+      color: #9CA3AF;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      transition: all 0.2s ease;
+    }
+    #toc a:hover {
+      color: var(--primary);
+    }
+    #toc a.active {
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* 返回顶部按钮 */
+    #back-to-top {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      z-index: 40;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(10px);
+    }
+    #back-to-top.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+    }
+
+    /* 尊重用户的减少动效设置 */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { animation: none; opacity: 1; transform: none; }
+      #reading-progress { transition: none; }
+    }
+  </style>
+</head>
+
+<body class="font-sans">
+
+<!-- 阅读进度条 -->
+<div id="reading-progress"></div>
+
+<!-- ===== 顶部导航：首页 / 返回博客列表 ===== -->
+<header id="site-nav" class="fixed top-0 inset-x-0 z-40">
+  <div class="max-w-6xl mx-auto px-6 md:px-10 h-16 flex items-center justify-between">
+    <a href="../index.html" class="nav-text flex items-center gap-2 text-white font-semibold tracking-wide">
+      <i class="fa-solid fa-arrow-left text-sm"></i>
+      <span>NullShade</span>
+      <span class="nav-sub hidden sm:inline text-white/60 font-normal">/ 博文</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-6 text-sm">
+      <a href="../index.html#blogs" class="nav-text text-white/80 hover:text-primary transition-colors">全部博文</a>
+      <a href="../index.html#mail" class="nav-text text-white/80 hover:text-primary transition-colors">联系我</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== 封面 ===== -->
+<section class="relative h-[78vh] min-h-[560px] flex items-end overflow-hidden">
+  <!-- 封面图与 blogs.json 中第一篇文章的 image 保持一致 -->
+  <img src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=misty%20mountain%20sunrise%2C%20cinematic%20landscape%20photography&image_size=landscape_16_9"
+       alt="山间日出封面图" class="absolute inset-0 w-full h-full object-cover">
+  <!-- 压暗层，保证白色文字可读 -->
+  <div class="absolute inset-0 bg-gradient-to-t from-[#111827] via-[#111827]/75 to-[#111827]/25"></div>
+  <!-- 靛蓝色光晕，呼应站点主色 -->
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_18%_25%,rgba(79,70,229,0.38),transparent_58%)]"></div>
+
+  <div class="relative w-full max-w-6xl mx-auto px-6 md:px-10 pb-14 text-white">
+    <p class="reveal text-xs md:text-sm uppercase tracking-[0.25em] text-white/70 mb-5">教程 · 前端入门</p>
+    <h1 class="reveal display text-[clamp(2rem,5vw,3.4rem)] leading-[1.25] font-bold mb-5" style="animation-delay:0.08s">
+      零基础搭建个人主页：<br class="hidden sm:block">从 0 到 1
+    </h1>
+    <p class="reveal text-white/75 max-w-2xl text-base md:text-lg leading-relaxed mb-8" style="animation-delay:0.16s">
+      不用框架、不用构建工具，只用 HTML、Tailwind CSS 和原生 JavaScript，
+      做一页属于自己的主页，并把它免费部署到 GitHub Pages。
+    </p>
+    <div class="reveal flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-white/70" style="animation-delay:0.24s">
+      <span class="flex items-center gap-2">
+        <img src="../data/imgs/avater.png" alt="NullShade 头像" class="w-8 h-8 rounded-full object-cover border border-white/30">
+        NullShade
+      </span>
+      <span class="flex items-center gap-1.5"><i class="fa-regular fa-calendar text-xs"></i>2025-10-20</span>
+      <span class="flex items-center gap-1.5"><i class="fa-regular fa-clock text-xs"></i>约 14 分钟阅读</span>
+      <span class="flex items-center gap-1.5"><i class="fa-solid fa-tag text-xs"></i>HTML / Tailwind / GitHub Pages</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 正文区：左侧目录 + 右侧文章 ===== -->
+<main class="max-w-6xl mx-auto px-6 md:px-10 py-14 md:py-20">
+  <div class="lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-16">
+
+    <!-- 桌面端目录（滚动时固定在左侧） -->
+    <aside class="hidden lg:block">
+      <div class="sticky top-24">
+        <p class="text-[0.7rem] font-semibold tracking-[0.22em] text-gray-400 mb-4">目录</p>
+        <nav id="toc" class="border-l border-gray-200">
+          <a href="#why">为什么要自己写主页</a>
+          <a href="#prepare">开工前的准备</a>
+          <a href="#skeleton">搭出页面骨架</a>
+          <a href="#tailwind">用 Tailwind 写样式</a>
+          <a href="#responsive">让布局适配手机</a>
+          <a href="#data">用 JSON 管理文章数据</a>
+          <a href="#render">渲染卡片与分页</a>
+          <a href="#deploy">部署到 GitHub Pages</a>
+          <a href="#pitfalls">踩过的坑</a>
+          <a href="#summary">小结</a>
+        </nav>
+        <div class="mt-8 pt-6 border-t border-gray-200">
+          <p class="text-xs text-gray-400">阅读进度</p>
+          <p class="text-2xl font-semibold text-primary mt-1"><span id="toc-percent">0</span>%</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 移动端目录（折叠） -->
+    <details class="lg:hidden mb-10 bg-white rounded-lg border border-gray-200 px-4 py-3">
+      <summary class="cursor-pointer text-sm font-semibold text-dark select-none">
+        <i class="fa-solid fa-list-ul text-primary mr-2"></i>本文目录
+      </summary>
+      <nav class="mt-3 space-y-2 text-sm text-gray-500">
+        <a href="#why" class="block hover:text-primary">01 · 为什么要自己写主页</a>
+        <a href="#prepare" class="block hover:text-primary">02 · 开工前的准备</a>
+        <a href="#skeleton" class="block hover:text-primary">03 · 搭出页面骨架</a>
+        <a href="#tailwind" class="block hover:text-primary">04 · 用 Tailwind 写样式</a>
+        <a href="#responsive" class="block hover:text-primary">05 · 让布局适配手机</a>
+        <a href="#data" class="block hover:text-primary">06 · 用 JSON 管理文章数据</a>
+        <a href="#render" class="block hover:text-primary">07 · 渲染卡片与分页</a>
+        <a href="#deploy" class="block hover:text-primary">08 · 部署到 GitHub Pages</a>
+        <a href="#pitfalls" class="block hover:text-primary">09 · 踩过的坑</a>
+        <a href="#summary" class="block hover:text-primary">10 · 小结</a>
+      </nav>
+    </details>
+
+    <!-- 文章主体 -->
+    <article class="article min-w-0 max-w-[760px]">
+
+      <p class="lead">
+        这个主页的第一版只有一张头像和一句签名，剩下的全是空白。后来我想，与其一直放着，
+        不如把它当作一个练手项目：<strong>不引入框架，不配置构建工具</strong>，
+        只用浏览器能直接读懂的三样东西——HTML、CSS、JavaScript，把它从零做出来。
+        这篇文章记录的就是完整的搭建过程，包括每一步的代码、我踩过的坑，以及最后怎么免费部署上线。
+      </p>
+
+      <blockquote>
+        <p>目标不是做出一个“很厉害”的网站，而是完整走通一次：设计 → 编码 → 数据 → 部署。</p>
+      </blockquote>
+
+      <!-- 01 -->
+      <h2 id="why">为什么要自己写主页</h2>
+      <p>
+        现在有很多现成的主页模板，甚至用在线工具几分钟就能生成一个。但自己写仍然有意义，
+        原因大概有三个：
+      </p>
+      <ul>
+        <li><strong>完全可控</strong>：颜色、间距、字号、动效都由自己决定，不用迁就模板的结构。</li>
+        <li><strong>理解原理</strong>：从浏览器如何解析 HTML，到 <code>fetch</code> 如何拿数据、如何渲染，都是真实可见的。</li>
+        <li><strong>沉淀资产</strong>：博客数据、文章页面、部署仓库都是自己的，以后可以慢慢迭代。</li>
+      </ul>
+      <p>
+        另外，个人主页是一个非常好的“试验田”。想试新的 CSS 特性、想练响应式布局，
+        都可以先在这里动手，坏了也不会影响任何人。
+      </p>
+
+      <div class="callout info">
+        <i class="fa-solid fa-circle-info"></i>
+        <p>这篇文章假设你会一点点 HTML 和 CSS。如果完全没接触过，建议先花半小时看看标签和选择器的基础，再回来跟着做。</p>
+      </div>
+
+      <!-- 02 -->
+      <h2 id="prepare">开工前的准备</h2>
+      <p>需要的工具非常少，都是免费的：</p>
+      <ol>
+        <li>一个编辑器，VS Code 或任意顺手的都可以；</li>
+        <li>一个现代浏览器，用来预览和调试；</li>
+        <li>Git，用来管理版本；</li>
+        <li>一个 GitHub 账号，用来托管和部署。</li>
+      </ol>
+      <p>
+        最终的项目结构不复杂，提前规划好目录能省掉很多路径问题。我的结构是这样的：
+      </p>
+
+      <div class="code-block">
+        <div class="code-head">
+          <span>项目结构</span>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+        <pre><code>eminent2009.github.io/
+├── index.html          <span class="cm"># 首页：头像、博文列表、联系方式</span>
+├── javascript.js       <span class="cm"># 读取数据、渲染卡片、分页</span>
+├── blogs.json          <span class="cm"># 博文元数据（标题、封面、链接等）</span>
+├── 404.html            <span class="cm"># 文章不存在时的兜底页</span>
+├── css/
+│   └── style.css       <span class="cm"># 自定义样式（滚动、动效）</span>
+├── data/
+│   └── imgs/           <span class="cm"># 头像、Logo、封面图</span>
+└── blogs/
+    └── build-my-homepage.html  <span class="cm"># 文章详情页（你正在看的这页）</span></code></pre>
+      </div>
+
+      <p>
+        这里刻意<strong>没有</strong> <code>node_modules</code>、没有打包配置。所有文件都可以直接被浏览器打开，
+        部署时也只是把整个目录推到 GitHub 上。
+      </p>
+
+      <!-- 03 -->
+      <h2 id="skeleton">搭出页面骨架</h2>
+      <p>
+        先写 HTML。骨架阶段不追求好看，重点是结构清晰、语义正确：
+        用 <code>header</code> 放头像和名字，用 <code>section</code> 放博文列表，用 <code>footer</code> 放联系方式。
+      </p>
+
+      <div class="code-block">
+        <div class="code-head">
+          <span>index.html</span>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+        <pre><code><span class="kw">&lt;!DOCTYPE html&gt;</span>
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;NullShade - 个人主页&lt;/title&gt;
+  &lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;
+  &lt;link rel="stylesheet" href="css/style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;header&gt;头像 + 名字&lt;/header&gt;
+  &lt;section id="blogs"&gt;
+    &lt;div id="blogs-container"&gt;&lt;/div&gt;  <span class="cm">&lt;!-- 卡片由 JS 生成 --&gt;</span>
+    &lt;div id="pagination"&gt;&lt;/div&gt;
+  &lt;/section&gt;
+  &lt;footer&gt;联系方式&lt;/footer&gt;
+  &lt;script src="javascript.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      </div>
+
+      <p>有两个细节值得单独说：</p>
+      <ul>
+        <li><code>lang="zh-CN"</code> 告诉浏览器页面是简体中文，影响断行和部分辅助功能；</li>
+        <li><code>viewport</code> 这行是移动端适配的前提，没有它手机上会按桌面宽度缩放，字会小到看不清。</li>
+      </ul>
+
+      <div class="callout tip">
+        <i class="fa-solid fa-lightbulb"></i>
+        <p>骨架阶段可以先不写 CSS，把内容按从上到下的顺序堆出来。结构对了，后面加样式只是“锦上添花”，不会返工。</p>
+      </div>
+
+      <!-- 04 -->
+      <h2 id="tailwind">用 Tailwind 写样式</h2>
+      <p>
+        为了不写一大堆重复的类名，我选择用 Tailwind 的工具类。通过 CDN 引入后，
+        在 <code>&lt;head&gt;</code> 里扩展主题色，就能全站复用：
+      </p>
+
+      <div class="code-block">
+        <div class="code-head">
+          <span>index.html · tailwind.config</span>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+        <pre><code>tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: <span class="str">'#4F46E5'</span>,   <span class="cm">// 主色：靛蓝</span>
+        secondary: <span class="str">'#F3F4F6'</span>, <span class="cm">// 次要色：浅灰</span>
+        dark: <span class="str">'#1F2937'</span>,      <span class="cm">// 正文深灰</span>
+      },
+    }
+  }
+}</code></pre>
+      </div>
+
+      <p>定好颜色之后，卡片的网格布局只需要一行类名：</p>
+
+      <div class="code-block">
+        <div class="code-head">
+          <span>index.html · 卡片容器</span>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+        <pre><code>&lt;div id="blogs-container"
+     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <p>
+        这行类名的意思是：手机上一列，平板两列，桌面三列，间距 2rem。
+        用传统 CSS 要写好几段媒体查询，这里一个类就表达了完整意图。
+      </p>
+
+      <p>
+        封面图区域还用了 <code>aspect-square + object-cover</code>：
+        无论原图尺寸如何，都裁成正方形，卡片高度才能整齐。卡片悬浮上浮的效果则放在
+        <code>css/style.css</code> 的 <code>.card-hover</code> 里，用过渡加位移实现。
+      </p>
+
+      <div class="callout warn">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <p>
+          这是我最开始踩的坑：<strong>Tailwind CDN 不会处理外部 CSS 文件里的 <code>@apply</code></strong>。
+          把 <code>@apply</code> 写进 <code>css/style.css</code>，浏览器会原样忽略，类名等于没写。
+          解决办法二是把自定义类改成原生 CSS 属性，要么用正式构建流程（CLI / Vite）。我选了前者。
+        </p>
+      </div>
+
+      <!-- 05 -->
+      <h2 id="responsive">让布局适配手机</h2>
+      <p>
+        响应式的核心就两件事：<strong>宽度用相对单位</strong>，<strong>布局按断点切换</strong>。
+        这个页面主要用了三种手段：
+      </p>
+      <ul>
+        <li>标题字号用 <code>clamp(1.8rem, 4vw, 2.5rem)</code>，随视口平滑变化，不会突然跳变；</li>
+        <li>卡片网格用 <code>grid-cols-1 md:grid-cols-2 lg:grid-cols-3</code>；</li>
+        <li>右侧悬浮头像在 <code>md</code> 以下直接隐藏，避免遮挡内容。</li>
+      </ul>
+      <p>
+        正文区域则限制了最大宽度。中文一行太长会很难读，移动端靠内边距控制，
+        桌面端交给 <code>max-w-6xl mx-auto</code> 居中。
+      </p>
+
+      <div class="callout tip">
+        <i class="fa-solid fa-mobile-screen"></i>
+        <p>调试时别只看缩放窗口，用浏览器的“设备模拟”功能，切到 iPhone 和 iPad 尺寸各看一遍，重点检查文字换行和图片裁切。</p>
+      </div>
+
+      <!-- 06 -->
+      <h2 id="data">用 JSON 管理文章数据</h2>
+      <p>
+        如果每发一篇文章都要改 HTML，很快就会乱。所以我抽了一个
+        <code>blogs.json</code>，每篇文章是一个对象，页面只负责读取和渲染：
+      </p>
+
+      <div class="code-block">
+        <div class="code-head">
+          <span>blogs.json</span>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+        <pre><code>[
+  {
+    "image": <span class="str">"./data/imgs/cover.jpg"</span>,   <span class="cm">// 封面图地址</span>
+    "title": <span class="str">"零基础搭建个人主页：从 0 到 1"</span>,
+    "description": <span class="str">"一句话简介，卡片上最多显示三行"</span>,
+    "date": <span class="str">"2025-10-20"</span>,
+    "url": <span class="str">"./blogs/build-my-homepage.html"</span>
+  }
+]</code></pre>
+      </div>
+
+      <p>
+        JSON 有一个限制：<strong>标准 JSON 不支持注释</strong>。写了 <code>//</code> 或 <code>/* */</code>，
+        <code>JSON.parse</code> 会直接报错，页面就白屏了。我的做法是加一个下划线开头的
+        <code>_comment</code> 字段，渲染时用不到，纯粹当备忘录：
+      </p>
+
+      <div class="code-block">
+        <div class="code-head">
+          <span>blogs.json · 注释写法</span>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+        <pre><code>{
+  "_comment": <span class="str">"每个对象是一张卡片；date 只是展示文本，不参与排序"</span>,
+  "title": <span class="str">"..."</span>
+}</code></pre>
+      </div>
+
+      <p>读取数据用 <code>fetch</code>，并且一定要包一层 <code>try/catch</code>：</p>
+
+      <div class="code-block">
+        <div class="code-head">
+          <span>javascript.js · loadBlogs</span>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+        <pre><code><span class="kw">async function</span> loadBlogs() {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> response = <span class="kw">await</span> fetch(<span class="str">'./blogs.json'</span>);
+    blogs = <span class="kw">await</span> response.json();
+    renderBlogs();
+    renderPagination();
+  } <span class="kw">catch</span> (error) {
+    console.error(<span class="str">'加载博客数据失败:'</span>, error);
+  }
+}</code></pre>
+      </div>
+
+      <div class="callout warn">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <p>
+          直接双击打开 <code>index.html</code>（<code>file://</code> 协议）时，浏览器会因为安全策略拒绝
+          <code>fetch</code> 本地文件，控制台报 CORS 错误，卡片一张都不显示。
+          解决办法是起一个本地服务器，例如在项目目录执行 <code>python3 -m http.server 8000</code>，
+          然后访问 <code>http://localhost:8000</code>。
+        </p>
+      </div>
+
+      <!-- 07 -->
+      <h2 id="render">渲染卡片与分页</h2>
+      <p>数据拿到之后，渲染逻辑其实很直接：算出当前页的区间，循环生成 DOM，再塞进容器。</p>
+
+      <div class="code-block">
+        <div class="code-head">
+          <span>javascript.js · renderBlogs（节选）</span>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+        <pre><code><span class="kw">const</span> startIndex = (currentPage - 1) * blogsPerPage;
+<span class="kw">const</span> currentBlogs = blogs.slice(startIndex, startIndex + blogsPerPage);
+
+currentBlogs.forEach(blog =&gt; {
+  <span class="kw">const</span> card = document.createElement(<span class="str">'div'</span>);
+  card.className = <span class="str">'bg-white rounded-lg shadow-md overflow-hidden'</span>;
+  card.innerHTML = <span class="str">`
+    &lt;img src="${blog.image}" alt="${blog.title}"&gt;
+    &lt;h3&gt;${blog.title}&lt;/h3&gt;
+    &lt;p&gt;${blog.description}&lt;/p&gt;
+  `</span>;
+  blogsContainer.appendChild(card);
+});</code></pre>
+      </div>
+
+      <p>
+        分页控件根据总页数动态生成：先算 <code>Math.ceil(blogs.length / blogsPerPage)</code>，
+        再渲染上一页、页码、下一页。只有一页时不显示分页，避免页面上出现无意义的按钮。
+      </p>
+
+      <p>整个数据流可以简化成下面这张图：</p>
+
+      <!-- 内联 SVG 流程图，不需要额外图片资源 -->
+      <figure class="my-10">
+        <svg viewBox="0 0 700 170" class="w-full" role="img" aria-label="blogs.json 经 fetch 加载后由 javascript.js 渲染成页面卡片">
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#4F46E5"></path>
+            </marker>
+          </defs>
+          <rect x="8" y="50" width="170" height="72" rx="12" fill="#EEF2FF" stroke="#C7D2FE"></rect>
+          <text x="88" y="82" text-anchor="middle" font-size="15" font-family="monospace" fill="#3730A3">blogs.json</text>
+          <text x="88" y="103" text-anchor="middle" font-size="12" fill="#6366F1">文章元数据</text>
+
+          <path d="M182 86 H248" stroke="#4F46E5" stroke-width="2" marker-end="url(#arrow)"></path>
+          <text x="215" y="74" text-anchor="middle" font-size="11" font-family="monospace" fill="#6B7280">fetch()</text>
+
+          <rect x="254" y="50" width="180" height="72" rx="12" fill="#F5F3FF" stroke="#DDD6FE"></rect>
+          <text x="344" y="82" text-anchor="middle" font-size="15" font-family="monospace" fill="#5B21B6">javascript.js</text>
+          <text x="344" y="103" text-anchor="middle" font-size="12" fill="#7C3AED">切片 + 生成 DOM</text>
+
+          <path d="M438 86 H504" stroke="#4F46E5" stroke-width="2" marker-end="url(#arrow)"></path>
+          <text x="471" y="74" text-anchor="middle" font-size="11" font-family="monospace" fill="#6B7280">render</text>
+
+          <rect x="510" y="50" width="182" height="72" rx="12" fill="#ECFDF5" stroke="#A7F3D0"></rect>
+          <text x="601" y="82" text-anchor="middle" font-size="15" font-family="monospace" fill="#065F46">页面卡片</text>
+          <text x="601" y="103" text-anchor="middle" font-size="12" fill="#059669">分页展示</text>
+        </svg>
+        <figcaption class="text-center text-sm text-gray-400 mt-2">
+          数据从 JSON 到卡片的三步：加载 → 处理 → 渲染
+        </figcaption>
+      </figure>
+
+      <p>
+        这里有一个安全边界：<code>innerHTML</code> 会解析字符串里的标签。如果数据完全由自己维护，
+        问题不大；但如果以后开放评论或允许他人投稿，就必须做转义，否则会有 XSS 风险。
+      </p>
+
+      <!-- 08 -->
+      <h2 id="deploy">部署到 GitHub Pages</h2>
+      <p>
+        页面写完，最后一步是让它真正可以访问。GitHub Pages 对纯静态站点免费，
+        而且仓库名用 <code>用户名.github.io</code> 时，访问地址就是根路径，最省事。
+      </p>
+
+      <div class="code-block">
+        <div class="code-head">
+          <span>终端</span>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+        <pre><code><span class="cm"># 1. 初始化仓库并提交</span>
+git init
+git add .
+git commit -m <span class="str">"init: 个人主页"</span>
+git branch -M main
+
+<span class="cm"># 2. 关联远程仓库（换成你自己的地址）</span>
+git remote add origin https://github.com/eminent2009/eminent2009.github.io.git
+git push -u origin main</code></pre>
+      </div>
+
+      <p>
+        推送完成后，在仓库的 <strong>Settings → Pages</strong> 里确认发布分支是 <code>main</code>、
+        目录是 <code>/ (root)</code>。等一两分钟，访问 <code>https://用户名.github.io</code> 就能看到页面了。
+      </p>
+
+      <div class="callout info">
+        <i class="fa-solid fa-circle-info"></i>
+        <p>
+          因为站点部署在子路径或根路径下，站内链接<strong>一律用相对路径</strong>
+          （<code>./blogs/xxx.html</code>），不要写死 <code>/blogs/xxx.html</code>，
+          否则换域名或换仓库名时整站链接都会失效。
+        </p>
+      </div>
+
+      <!-- 09 -->
+      <h2 id="pitfalls">踩过的坑</h2>
+      <p>把整个过程里最有代表性的几个问题整理成表，遇到类似现象可以先对照排查：</p>
+
+      <div class="overflow-x-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>现象</th>
+              <th>原因</th>
+              <th>解决方式</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>卡片完全不显示，控制台无报错</td>
+              <td>用 <code>file://</code> 打开，<code>fetch</code> 被拦截</td>
+              <td>起本地服务器：<code>python3 -m http.server</code></td>
+            </tr>
+            <tr>
+              <td>控制台报 JSON 解析错误</td>
+              <td>在 JSON 里写了 <code>//</code> 注释或多余的逗号</td>
+              <td>改用 <code>_comment</code> 字段；提交前校验格式</td>
+            </tr>
+            <tr>
+              <td>自定义类完全没生效</td>
+              <td>CDN 模式不处理外部 CSS 里的 <code>@apply</code></td>
+              <td>改写原生 CSS，或改用 Tailwind 构建流程</td>
+            </tr>
+            <tr>
+              <td>部署后图片 404</td>
+              <td>路径大小写不一致，或用了绝对路径</td>
+              <td>核对文件名，统一使用相对路径</td>
+            </tr>
+            <tr>
+              <td>点“阅读更多”跳到 404</td>
+              <td><code>url</code> 指向的文章页还没创建</td>
+              <td>在 <code>blogs/</code> 下补上对应 HTML，或先隐藏该条数据</td>
+            </tr>
+            <tr>
+              <td>手机上字号特别小</td>
+              <td>缺少 <code>viewport</code> meta 标签</td>
+              <td>补上 <code>width=device-width, initial-scale=1.0</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 10 -->
+      <h2 id="summary">小结</h2>
+      <p>
+        整个主页没有用到任何框架，代码量也不大，但它完整覆盖了一个静态站点该有的环节：
+        结构、样式、响应式、数据驱动和部署。做完之后，我对“页面是怎么来的”这件事清楚了很多。
+      </p>
+      <p>如果继续迭代，我打算按这个顺序往下走：</p>
+      <ul>
+        <li>给文章页加上代码高亮和上一篇 / 下一篇导航；</li>
+        <li>把 Tailwind CDN 换成构建版本，减少首屏体积；</li>
+        <li>增加标签筛选和搜索，文章多了之后会更好找；</li>
+        <li>补充 RSS 和站点地图，方便订阅与收录。</li>
+      </ul>
+      <p>
+        最后想说，个人主页不需要一次做到完美。先把第一版推上线，再慢慢改，
+        这本身也是学习的一部分。
+      </p>
+
+      <!-- 作者信息 -->
+      <div class="mt-16 p-6 md:p-8 bg-white rounded-xl border border-gray-100 shadow-sm flex flex-col sm:flex-row sm:items-center gap-5">
+        <img src="../data/imgs/avater.png" alt="NullShade" class="w-16 h-16 rounded-full object-cover border-2 border-primary/20">
+        <div class="flex-1">
+          <p class="font-semibold text-dark mb-1">NullShade</p>
+          <p class="text-sm text-gray-500 leading-relaxed">前端爱好者，喜欢把折腾过程写下来。海内存知己，天涯若比邻。</p>
+        </div>
+        <div class="flex gap-4 text-primary text-lg">
+          <a href="https://github.com/eminent2009" class="hover:text-primary/70 transition-colors" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+          <a href="https://space.bilibili.com/677771474" class="hover:text-primary/70 transition-colors" aria-label="哔哩哔哩"><i class="fa-brands fa-bilibili"></i></a>
+          <a href="../index.html#mail" class="hover:text-primary/70 transition-colors" aria-label="邮箱"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div>
+
+      <!-- 返回列表 -->
+      <div class="mt-10">
+        <a href="../index.html#blogs"
+           class="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors">
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          返回博文列表
+        </a>
+      </div>
+
+    </article>
+  </div>
+</main>
+
+<!-- ===== 页脚 ===== -->
+<footer class="py-10 px-6 bg-dark text-gray-400 text-sm">
+  <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <p>© 2025 NullShade - 保留所有权利</p>
+    <div class="flex items-center gap-5">
+      <a href="https://github.com/eminent2009" class="hover:text-white transition-colors"><i class="fa-brands fa-github"></i></a>
+      <a href="https://space.bilibili.com/677771474" class="hover:text-white transition-colors"><i class="fa-brands fa-bilibili"></i></a>
+      <a href="../index.html#mail" class="hover:text-white transition-colors"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+  </div>
+</footer>
+
+<!-- 返回顶部 -->
+<button id="back-to-top" type="button" aria-label="返回顶部"
+        class="w-11 h-11 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-colors">
+  <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<script>
+  /* ============================================================
+     1. 阅读进度条 + 导航栏状态 + 返回顶部
+     统一放在一个 scroll 回调里，用 requestAnimationFrame 节流
+     ============================================================ */
+  const progressBar = document.getElementById('reading-progress');
+  const percentText = document.getElementById('toc-percent');
+  const nav = document.getElementById('site-nav');
+  const backToTop = document.getElementById('back-to-top');
+  let ticking = false;
+
+  function onScroll() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+
+    // 百分比避免除以 0（页面短于一屏时）
+    const percent = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+    progressBar.style.width = percent + '%';
+    if (percentText) percentText.textContent = Math.round(percent);
+
+    // 滚过封面后，导航栏切换成浅色毛玻璃
+    nav.classList.toggle('is-solid', scrollTop > 80);
+
+    // 回到顶部按钮在阅读一段距离后出现
+    backToTop.classList.toggle('show', scrollTop > 600);
+
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(onScroll);
+      ticking = true;
+    }
+  });
+  onScroll();
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ============================================================
+     2. 目录高亮：用 IntersectionObserver 监听每个章节标题
+     可视区域上部 20%~30% 命中哪个标题，就高亮对应目录项
+     ============================================================ */
+  const tocLinks = Array.from(document.querySelectorAll('#toc a'));
+  const headings = tocLinks
+    .map(link => document.getElementById(link.getAttribute('href').slice(1)))
+    .filter(Boolean);
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      tocLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+      });
+    });
+  }, { rootMargin: '0px 0px -70% 0px', threshold: 0 });
+
+  headings.forEach(heading => observer.observe(heading));
+
+  /* ============================================================
+     3. 代码块一键复制
+     复制的是 <pre> 里的纯文本，不包含高亮的 span 结构
+     ============================================================ */
+  document.querySelectorAll('.copy-btn').forEach(button => {
+    button.addEventListener('click', async () => {
+      const pre = button.closest('.code-block').querySelector('pre');
+      const text = pre ? pre.innerText : '';
+      const original = button.textContent;
+
+      // 先给出反馈，避免剪贴板权限请求较慢时按钮看起来“没反应”
+      button.textContent = '已复制';
+      setTimeout(() => { button.textContent = original; }, 2000);
+
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (error) {
+        // 非 HTTPS 或浏览器不支持剪贴板 API 时的降级方案
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
