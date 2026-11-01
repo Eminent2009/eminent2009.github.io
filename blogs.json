@@ -1,0 +1,23 @@
+[
+  {
+    "_comment": "【模板说明】每个对象就是一张卡片。必填字段：image 封面图、title 标题、description 简介（最多显示 3 行）、date 日期（格式 YYYY-MM-DD，筛选按年月）、url 文章路径、type 类型（一级分类，如：技术 / 生活 / 摄影）、tags 标签数组（可多个，用于标签筛选）。以下划线开头的 _comment 只是注释，渲染时会忽略，可整段删除。",
+    "image": "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=misty%20mountain%20sunrise%2C%20cinematic%20landscape%20photography&image_size=square",
+    "title": "零基础搭建个人主页：从 0 到 1",
+    "description": "记录我用 HTML、Tailwind CSS 和原生 JavaScript 搭建这个个人主页的全过程，包括目录结构设计、响应式布局、博客数据加载与分页的实现思路，适合刚开始接触前端的同学参考。",
+    "date": "2025-10-20",
+    "url": "./blogs/build-my-homepage.html",
+    "type": "技术",
+    "tags": ["前端", "HTML", "CSS", "JavaScript", "GitHub Pages"]
+  },
+  {
+  "image": "./data/blogs-imgs/1235fst.png",
+  "title": "粒子会散进黑夜，我喜欢你这件事不会",
+  "description": "我把所有的喜欢写进一条公式，从此每一秒，都有 250 颗小心思替我从心形边缘漏出来。",
+  "date": "2026-11-01",
+  "url": "./blogs/post-20261101-t1dme2.html",
+  "type": "技术",
+  "tags": [
+    "HTML"
+  ]
+}
+]

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="shortcut icon" href="./data/imgs/logo.png" type="image/x-icon">
-  <title>个人主页模板</title>
+  <title>NullShade - 个人主页</title>
   <!-- 引入Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- 引入Font Awesome图标 -->
@@ -68,7 +68,45 @@
 <!-- 博文区域 -->
 <section id="blogs" class="py-12 px-6 md:px-12">
   <div class="max-w-6xl mx-auto">
-    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">我的博文</h2>
+    <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">我的博文及项目</h2>
+
+    <!-- 筛选栏：类型 / 标签 / 日期，选项由 javascript.js 根据 blogs.json 动态生成 -->
+    <div class="mb-10 bg-white rounded-xl shadow-sm border border-gray-100 p-5 md:p-6">
+      <div class="flex flex-col lg:flex-row lg:items-start gap-6">
+        <div class="flex-1 space-y-4">
+          <!-- 类型筛选 -->
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4">
+            <span class="text-sm font-semibold text-gray-500 sm:w-16 shrink-0 sm:pt-1.5">类型</span>
+            <div id="filter-type" class="flex flex-wrap gap-2" role="group" aria-label="按类型筛选"></div>
+          </div>
+          <!-- 标签筛选 -->
+          <div class="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4">
+            <span class="text-sm font-semibold text-gray-500 sm:w-16 shrink-0 sm:pt-1.5">标签</span>
+            <div id="filter-tag" class="flex flex-wrap gap-2" role="group" aria-label="按标签筛选"></div>
+          </div>
+        </div>
+        <!-- 日期筛选 -->
+        <div class="flex flex-col gap-2 lg:w-44 shrink-0">
+          <label for="filter-date" class="text-sm font-semibold text-gray-500">日期</label>
+          <select id="filter-date"
+                  class="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm text-gray-700 bg-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors">
+            <option value="all">全部时间</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 筛选结果统计与清除 -->
+      <div class="mt-5 pt-4 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+        <p class="text-sm text-gray-500">
+          共 <span id="filter-count" class="font-semibold text-primary">0</span> 篇内容
+        </p>
+        <button id="clear-filters" type="button"
+                class="items-center gap-1.5 text-sm text-gray-500 hover:text-primary transition-colors"
+                style="display:none">
+          <i class="fa-solid fa-xmark text-xs"></i>清除筛选
+        </button>
+      </div>
+    </div>
 
     <!-- 博文卡片网格 -->
     <div id="blogs-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
